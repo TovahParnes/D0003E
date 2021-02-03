@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 000000a0  00000000  00000000  00000750  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00001011  00000000  00000000  000007f0  2**0
+  6 .debug_info   00001090  00000000  00000000  000007f0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000ae4  00000000  00000000  00001801  2**0
+  7 .debug_abbrev 00000ae0  00000000  00000000  00001880  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000005a1  00000000  00000000  000022e5  2**0
+  8 .debug_line   00000618  00000000  00000000  00002360  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  0000021c  00000000  00000000  00002888  2**2
+  9 .debug_frame  00000228  00000000  00000000  00002978  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000549  00000000  00000000  00002aa4  2**0
+ 10 .debug_str    00000562  00000000  00000000  00002ba0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000007f6  00000000  00000000  00002fed  2**0
+ 11 .debug_loc    000008ff  00000000  00000000  00003102  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000a0  00000000  00000000  000037e3  2**0
+ 12 .debug_ranges 000000a0  00000000  00000000  00003a01  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -101,33 +101,33 @@ Disassembly of section .text:
 #include <stdint.h>
 #include <avr/io.h>
 
+int pp;
+mutex m = MUTEX_INIT;
+
+  9a:	8f e0       	ldi	r24, 0x0F	; 15
+  9c:	80 93 e7 00 	sts	0x00E7, r24	; 0x8000e7 <__DATA_REGION_ORIGIN__+0x87>
 void LCDInit(void){
 	//Set drive time to 300 milliseconds and contrast control voltage to 3.35 V
 	LCDCCR = (1 << LCDCC3) | (1 << LCDCC2) | (1 << LCDCC1) | (1 << LCDCC0);
-  9a:	8f e0       	ldi	r24, 0x0F	; 15
-  9c:	80 93 e7 00 	sts	0x00E7, r24	; 0x8000e7 <__DATA_REGION_ORIGIN__+0x87>
-	
-	//Set external clock source, 1/3 bias, 1/4 duty cycle, 25 segments
-	LCDCRB = (1 << LCDCS) | (1 << LCDMUX1) | (1 << LCDMUX0) | (1 << LCDPM2) | (1 << LCDPM1) | (1 << LCDPM0);
   a0:	87 eb       	ldi	r24, 0xB7	; 183
   a2:	80 93 e5 00 	sts	0x00E5, r24	; 0x8000e5 <__DATA_REGION_ORIGIN__+0x85>
 	
-	//Set prescaler setting N=16 and clock divide settings D=8
-	LCDFRR = (1 << LCDCD2) | (1 << LCDCD1) | (1 << LCDCD0);
+	//Set external clock source, 1/3 bias, 1/4 duty cycle, 25 segments
+	LCDCRB = (1 << LCDCS) | (1 << LCDMUX1) | (1 << LCDMUX0) | (1 << LCDPM2) | (1 << LCDPM1) | (1 << LCDPM0);
   a6:	87 e0       	ldi	r24, 0x07	; 7
   a8:	80 93 e6 00 	sts	0x00E6, r24	; 0x8000e6 <__DATA_REGION_ORIGIN__+0x86>
 	
-	//Enable low power waveform, no frame interrupt, no blanking, LCD enable
-	LCDCRA = (1 << LCDAB) | (1 << LCDEN);
+	//Set prescaler setting N=16 and clock divide settings D=8
+	LCDFRR = (1 << LCDCD2) | (1 << LCDCD1) | (1 << LCDCD0);
   ac:	80 ec       	ldi	r24, 0xC0	; 192
   ae:	80 93 e4 00 	sts	0x00E4, r24	; 0x8000e4 <__DATA_REGION_ORIGIN__+0x84>
   b2:	08 95       	ret
 
 000000b4 <writeChar>:
+	
+	//Enable low power waveform, no frame interrupt, no blanking, LCD enable
+	LCDCRA = (1 << LCDAB) | (1 << LCDEN);
 }
-
-
-void writeChar(char ch, int pos){
   b4:	cf 93       	push	r28
   b6:	df 93       	push	r29
   b8:	cd b7       	in	r28, 0x3d	; 61
@@ -138,16 +138,16 @@ void writeChar(char ch, int pos){
   c2:	de bf       	out	0x3e, r29	; 62
   c4:	0f be       	out	0x3f, r0	; 63
   c6:	cd bf       	out	0x3d, r28	; 61
-	if (pos < 0 || pos > 5){
+
   c8:	66 30       	cpi	r22, 0x06	; 6
   ca:	71 05       	cpc	r23, r1
   cc:	e8 f5       	brcc	.+122    	; 0x148 <writeChar+0x94>
 	
+	//Initiate the nibble to be sent to the display
+	uint8_t nibbleNum = 0x0;
+	
 	//Initiate number to print;
 	uint16_t num = 0x0;
-	
-	//Set SCC table to have the correct SCC values for the numbers 0-9 and a special character
-	uint16_t tableSCC[11] = {0x1551, 0x0110, 0x1E11, 0x1B11, 0x0B50, 0x1B41, 0x1F41, 0x0111, 0x1F51, 0x0B51, 0xC028};
   ce:	96 e1       	ldi	r25, 0x16	; 22
   d0:	e4 e0       	ldi	r30, 0x04	; 4
   d2:	f1 e0       	ldi	r31, 0x01	; 1
@@ -158,15 +158,15 @@ void writeChar(char ch, int pos){
   dc:	9a 95       	dec	r25
   de:	e1 f7       	brne	.-8      	; 0xd8 <writeChar+0x24>
 	
-
-	//Check if the given character is in the interval 0-9 and set the right number value
-	if (ch >= '0' && ch <= '9'){
+	//Set SCC table to have the correct SCC values for the numbers 0-9 and a special character
+	uint16_t tableSCC[11] = {0x1551, 0x0110, 0x1E11, 0x1B11, 0x0B50, 0x1B41, 0x1F41, 0x0111, 0x1F51, 0x0B51, 0xC028};
+	
   e0:	90 ed       	ldi	r25, 0xD0	; 208
   e2:	98 0f       	add	r25, r24
   e4:	9a 30       	cpi	r25, 0x0A	; 10
   e6:	50 f4       	brcc	.+20     	; 0xfc <writeChar+0x48>
-		//Set the corresponding value from the table to the number
-		num = tableSCC[ch - '0'];
+
+	//Check if the given character is in the interval 0-9 and set the right number value
   e8:	e8 2f       	mov	r30, r24
   ea:	f0 e0       	ldi	r31, 0x00	; 0
   ec:	f0 97       	sbiw	r30, 0x30	; 48
@@ -177,94 +177,94 @@ void writeChar(char ch, int pos){
   f6:	21 81       	ldd	r18, Z+1	; 0x01
   f8:	32 81       	ldd	r19, Z+2	; 0x02
   fa:	02 c0       	rjmp	.+4      	; 0x100 <writeChar+0x4c>
+	if (ch >= '0' && ch <= '9'){
+		//Set the corresponding value from the table to the number
+		num = tableSCC[ch - '0'];
+  fc:	28 e2       	ldi	r18, 0x28	; 40
+  fe:	30 ec       	ldi	r19, 0xC0	; 192
 		} else {
 		//Set the special character from the table to the number
 		num = tableSCC[10];
-  fc:	28 e2       	ldi	r18, 0x28	; 40
-  fe:	30 ec       	ldi	r19, 0xC0	; 192
 	}
-	
-	//Update the LCD address to the given position
-	addrLCD += pos >> 1;
  100:	fb 01       	movw	r30, r22
  102:	f5 95       	asr	r31
  104:	e7 95       	ror	r30
  106:	e4 51       	subi	r30, 0x14	; 20
  108:	ff 4f       	sbci	r31, 0xFF	; 255
 	
-	//Set the correct mask if the position is even or odd
-	if (pos % 2 == 0){
+	//Update the LCD address to the given position
+	addrLCD += pos >> 1;
  10a:	db 01       	movw	r26, r22
  10c:	a1 70       	andi	r26, 0x01	; 1
  10e:	bb 27       	eor	r27, r27
  110:	60 ff       	sbrs	r22, 0
  112:	02 c0       	rjmp	.+4      	; 0x118 <writeChar+0x64>
-		mask = 0xF0;
-		} else {
-		mask = 0x0F;
- 114:	6f e0       	ldi	r22, 0x0F	; 15
- 116:	01 c0       	rjmp	.+2      	; 0x11a <writeChar+0x66>
-	//Update the LCD address to the given position
-	addrLCD += pos >> 1;
 	
 	//Set the correct mask if the position is even or odd
 	if (pos % 2 == 0){
-		mask = 0xF0;
+ 114:	6f e0       	ldi	r22, 0x0F	; 15
+ 116:	01 c0       	rjmp	.+2      	; 0x11a <writeChar+0x66>
+		num = tableSCC[10];
+	}
+	
+	//Update the LCD address to the given position
+	addrLCD += pos >> 1;
+	
  118:	60 ef       	ldi	r22, 0xF0	; 240
  11a:	af 01       	movw	r20, r30
  11c:	4c 5e       	subi	r20, 0xEC	; 236
  11e:	5f 4f       	sbci	r21, 0xFF	; 255
+		mask = 0xF0;
+		} else {
+		mask = 0x0F;
 	}
 	
 	//Place each of the four nibbles of the number on the LCD
-	for (int i = 0; i < 4; i++){
-		//Masking the smallest number to the current nibble
-		nibbleNum = num & 0xF;
  120:	82 2f       	mov	r24, r18
  122:	8f 70       	andi	r24, 0x0F	; 15
-		//Remove the used nibble
-		num = num >> 4;
+	for (int i = 0; i < 4; i++){
+		//Masking the smallest number to the current nibble
  124:	32 95       	swap	r19
  126:	22 95       	swap	r18
  128:	2f 70       	andi	r18, 0x0F	; 15
  12a:	23 27       	eor	r18, r19
  12c:	3f 70       	andi	r19, 0x0F	; 15
  12e:	23 27       	eor	r18, r19
-		
-		//Shift the nibble to the right position if the pos is odd
-		if (pos % 2 != 0){
+		nibbleNum = num & 0xF;
+		//Remove the used nibble
+		num = num >> 4;
  130:	10 97       	sbiw	r26, 0x00	; 0
  132:	11 f0       	breq	.+4      	; 0x138 <writeChar+0x84>
-			nibbleNum = nibbleNum << 4;
+		
  134:	82 95       	swap	r24
  136:	80 7f       	andi	r24, 0xF0	; 240
+		//Shift the nibble to the right position if the pos is odd
+		if (pos % 2 != 0){
+			nibbleNum = nibbleNum << 4;
 		}
-		
-		//Write the current nibble to the LCD
-		*addrLCD = (*addrLCD & mask) | nibbleNum;
  138:	90 81       	ld	r25, Z
  13a:	96 23       	and	r25, r22
  13c:	89 2b       	or	r24, r25
  13e:	80 83       	st	Z, r24
 		
-		//Move to the next nibble sequence of the current digit on the LCD
-		addrLCD += 5;
+		//Write the current nibble to the LCD
+		*addrLCD = (*addrLCD & mask) | nibbleNum;
  140:	35 96       	adiw	r30, 0x05	; 5
+	//Set the correct mask if the position is even or odd
+	if (pos % 2 == 0){
+		mask = 0xF0;
 		} else {
 		mask = 0x0F;
 	}
-	
-	//Place each of the four nibbles of the number on the LCD
-	for (int i = 0; i < 4; i++){
  142:	4e 17       	cp	r20, r30
  144:	5f 07       	cpc	r21, r31
  146:	61 f7       	brne	.-40     	; 0x120 <writeChar+0x6c>
+		}
+		
+		//Write the current nibble to the LCD
 		*addrLCD = (*addrLCD & mask) | nibbleNum;
 		
 		//Move to the next nibble sequence of the current digit on the LCD
-		addrLCD += 5;
-	}
-}
  148:	66 96       	adiw	r28, 0x16	; 22
  14a:	0f b6       	in	r0, 0x3f	; 63
  14c:	f8 94       	cli
@@ -276,8 +276,8 @@ void writeChar(char ch, int pos){
  158:	08 95       	ret
 
 0000015a <is_prime>:
-
-bool is_prime(long i){
+		addrLCD += 5;
+	}
  15a:	cf 92       	push	r12
  15c:	df 92       	push	r13
  15e:	ef 92       	push	r14
@@ -286,15 +286,15 @@ bool is_prime(long i){
  164:	df 93       	push	r29
  166:	6b 01       	movw	r12, r22
  168:	7c 01       	movw	r14, r24
-	//Check if the given long has any prime factors
-	for(int n = 2; n < i; n++){
+}
+
  16a:	83 e0       	ldi	r24, 0x03	; 3
  16c:	c8 16       	cp	r12, r24
  16e:	d1 04       	cpc	r13, r1
  170:	e1 04       	cpc	r14, r1
  172:	f1 04       	cpc	r15, r1
  174:	74 f1       	brlt	.+92     	; 0x1d2 <is_prime+0x78>
-		if (i % n == 0){
+bool is_prime(long i){
  176:	d7 01       	movw	r26, r14
  178:	c6 01       	movw	r24, r12
  17a:	81 70       	andi	r24, 0x01	; 1
@@ -327,12 +327,12 @@ bool is_prime(long i){
  1b2:	68 2b       	or	r22, r24
  1b4:	69 2b       	or	r22, r25
  1b6:	89 f0       	breq	.+34     	; 0x1da <is_prime+0x80>
+		
+		//Move to the next nibble sequence of the current digit on the LCD
+		addrLCD += 5;
 	}
 }
 
-bool is_prime(long i){
-	//Check if the given long has any prime factors
-	for(int n = 2; n < i; n++){
  1b8:	21 96       	adiw	r28, 0x01	; 1
  1ba:	9e 01       	movw	r18, r28
  1bc:	0d 2e       	mov	r0, r29
@@ -344,28 +344,28 @@ bool is_prime(long i){
  1c8:	4e 05       	cpc	r20, r14
  1ca:	5f 05       	cpc	r21, r15
  1cc:	6c f3       	brlt	.-38     	; 0x1a8 <is_prime+0x4e>
-		if (i % n == 0){
-			return false;
-		}
-	}
-	return true;
- 1ce:	81 e0       	ldi	r24, 0x01	; 1
- 1d0:	05 c0       	rjmp	.+10     	; 0x1dc <is_prime+0x82>
- 1d2:	81 e0       	ldi	r24, 0x01	; 1
- 1d4:	03 c0       	rjmp	.+6      	; 0x1dc <is_prime+0x82>
-
 bool is_prime(long i){
 	//Check if the given long has any prime factors
 	for(int n = 2; n < i; n++){
 		if (i % n == 0){
 			return false;
+ 1ce:	81 e0       	ldi	r24, 0x01	; 1
+ 1d0:	05 c0       	rjmp	.+10     	; 0x1dc <is_prime+0x82>
+ 1d2:	81 e0       	ldi	r24, 0x01	; 1
+ 1d4:	03 c0       	rjmp	.+6      	; 0x1dc <is_prime+0x82>
+		addrLCD += 5;
+	}
+}
+
+bool is_prime(long i){
+	//Check if the given long has any prime factors
  1d6:	80 e0       	ldi	r24, 0x00	; 0
  1d8:	01 c0       	rjmp	.+2      	; 0x1dc <is_prime+0x82>
  1da:	80 e0       	ldi	r24, 0x00	; 0
+	for(int n = 2; n < i; n++){
+		if (i % n == 0){
+			return false;
 		}
-	}
-	return true;
-}
  1dc:	df 91       	pop	r29
  1de:	cf 91       	pop	r28
  1e0:	ff 90       	pop	r15
@@ -375,8 +375,8 @@ bool is_prime(long i){
  1e8:	08 95       	ret
 
 000001ea <printAt>:
-
-void printAt(long num, int pos) {
+	}
+	return true;
  1ea:	8f 92       	push	r8
  1ec:	9f 92       	push	r9
  1ee:	af 92       	push	r10
@@ -390,8 +390,8 @@ void printAt(long num, int pos) {
  1fe:	4b 01       	movw	r8, r22
  200:	5c 01       	movw	r10, r24
  202:	ea 01       	movw	r28, r20
-    int pp = pos;
-    writeChar( (num % 100) / 10 + '0', pp);
+}
+
  204:	24 e6       	ldi	r18, 0x64	; 100
  206:	30 e0       	ldi	r19, 0x00	; 0
  208:	40 e0       	ldi	r20, 0x00	; 0
@@ -411,8 +411,8 @@ void printAt(long num, int pos) {
  228:	80 e3       	ldi	r24, 0x30	; 48
  22a:	82 0f       	add	r24, r18
  22c:	0e 94 5a 00 	call	0xb4	; 0xb4 <writeChar>
-    pp++;
-    writeChar( num % 10 + '0', pp);
+void printAt(long num, int pos) {
+	lock(&m);
  230:	21 96       	adiw	r28, 0x01	; 1
  232:	c5 01       	movw	r24, r10
  234:	b4 01       	movw	r22, r8
@@ -423,7 +423,7 @@ void printAt(long num, int pos) {
  240:	be 01       	movw	r22, r28
  242:	80 5d       	subi	r24, 0xD0	; 208
  244:	0e 94 5a 00 	call	0xb4	; 0xb4 <writeChar>
-}
+	pp = pos; 
  248:	df 91       	pop	r29
  24a:	cf 91       	pop	r28
  24c:	ff 90       	pop	r15
@@ -437,74 +437,74 @@ void printAt(long num, int pos) {
  25c:	08 95       	ret
 
 0000025e <computePrimes>:
-
-void computePrimes(int pos) {
+    writeChar( (num % 100) / 10 + '0', pp);
+	for(volatile int i  = 0; i < 1000000; i++){}
  25e:	ec 01       	movw	r28, r24
-    long n;
-
-    for(n = 1; ; n++) {
+    pp++;
+    writeChar( num % 10 + '0', pp);
+	unlock(&m);
  260:	c1 2c       	mov	r12, r1
  262:	d1 2c       	mov	r13, r1
  264:	76 01       	movw	r14, r12
  266:	c3 94       	inc	r12
-        if (is_prime(n)) {
+}
  268:	c7 01       	movw	r24, r14
  26a:	b6 01       	movw	r22, r12
  26c:	0e 94 ad 00 	call	0x15a	; 0x15a <is_prime>
  270:	88 23       	and	r24, r24
  272:	29 f0       	breq	.+10     	; 0x27e <computePrimes+0x20>
-            printAt(n, pos);
+
  274:	ae 01       	movw	r20, r28
  276:	c7 01       	movw	r24, r14
  278:	b6 01       	movw	r22, r12
  27a:	0e 94 f5 00 	call	0x1ea	; 0x1ea <printAt>
-}
-
-void computePrimes(int pos) {
-    long n;
-
-    for(n = 1; ; n++) {
+	pp = pos; 
+    writeChar( (num % 100) / 10 + '0', pp);
+	for(volatile int i  = 0; i < 1000000; i++){}
+    pp++;
+    writeChar( num % 10 + '0', pp);
+	unlock(&m);
  27e:	8f ef       	ldi	r24, 0xFF	; 255
  280:	c8 1a       	sub	r12, r24
  282:	d8 0a       	sbc	r13, r24
  284:	e8 0a       	sbc	r14, r24
  286:	f8 0a       	sbc	r15, r24
+}
+
+void computePrimes(int pos) {
+    long n;
+ 288:	ef cf       	rjmp	.-34     	; 0x268 <computePrimes+0xa>
+
+0000028a <main>:
+
+    for(n = 1; ; n++) {
         if (is_prime(n)) {
             printAt(n, pos);
         }
     }
- 288:	ef cf       	rjmp	.-34     	; 0x268 <computePrimes+0xa>
-
-0000028a <main>:
-}
-
-
-int main() {
-	
-	CLKPR = 0x80;
  28a:	e1 e6       	ldi	r30, 0x61	; 97
  28c:	f0 e0       	ldi	r31, 0x00	; 0
  28e:	80 e8       	ldi	r24, 0x80	; 128
  290:	80 83       	st	Z, r24
-	CLKPR = 0x00;
+}
  292:	10 82       	st	Z, r1
-	
-	LCDInit();
+
+
  294:	0e 94 4d 00 	call	0x9a	; 0x9a <LCDInit>
-    spawn(computePrimes, 0);
+int main() {
  298:	60 e0       	ldi	r22, 0x00	; 0
  29a:	70 e0       	ldi	r23, 0x00	; 0
  29c:	8f e2       	ldi	r24, 0x2F	; 47
  29e:	91 e0       	ldi	r25, 0x01	; 1
  2a0:	0e 94 8d 01 	call	0x31a	; 0x31a <spawn>
-    computePrimes(3);
+	
  2a4:	83 e0       	ldi	r24, 0x03	; 3
  2a6:	90 e0       	ldi	r25, 0x00	; 0
  2a8:	0e 94 2f 01 	call	0x25e	; 0x25e <computePrimes>
 
 000002ac <enqueue>:
-	TCNT1 = 0;
-	OCR1A = 0x10;
+	TCNT1 = 0x0;
+	
 }
 
 static void enqueue(thread p, thread *queue) {
@@ -648,35 +648,38 @@ static void initialize(void) {
 	// Initialize for timer 
 	
 	// Enable timer output compare A interrupts 
-	TIMSK1 = (1<<OCIE1B) | TIMSK1;
+	TIMSK1 = (1<<OCIE1A) | TIMSK1;
  378:	ef e6       	ldi	r30, 0x6F	; 111
  37a:	f0 e0       	ldi	r31, 0x00	; 0
  37c:	20 81       	ld	r18, Z
- 37e:	24 60       	ori	r18, 0x04	; 4
+ 37e:	22 60       	ori	r18, 0x02	; 2
  380:	20 83       	st	Z, r18
 	// Turn on OC1A compare match
-	TCCR1A = (1<<COM1A0) | TCCR1A;
+	TCCR1A = (1<<COM1A0) | (1<<COM1A1) | TCCR1A;
  382:	e0 e8       	ldi	r30, 0x80	; 128
  384:	f0 e0       	ldi	r31, 0x00	; 0
  386:	20 81       	ld	r18, Z
- 388:	20 64       	ori	r18, 0x40	; 64
+ 388:	20 6c       	ori	r18, 0xC0	; 192
  38a:	20 83       	st	Z, r18
 	// Set timer to clear on timer compare (CTC) and timer prescaling factor 1024 
-	TCCR1B = (1<<WGM13) | (1<<WGM12) | (1<<CS12) | (1<<CS10) | TCCR1B;
+	TCCR1B = (1<<WGM12) | (1<<CS12) | (1<<CS10) | TCCR1B;
  38c:	e1 e8       	ldi	r30, 0x81	; 129
  38e:	f0 e0       	ldi	r31, 0x00	; 0
  390:	20 81       	ld	r18, Z
- 392:	2d 61       	ori	r18, 0x1D	; 29
+ 392:	2d 60       	ori	r18, 0x0D	; 13
  394:	20 83       	st	Z, r18
-		
-	TCNT1 = 0;
- 396:	10 92 85 00 	sts	0x0085, r1	; 0x800085 <__DATA_REGION_ORIGIN__+0x25>
- 39a:	10 92 84 00 	sts	0x0084, r1	; 0x800084 <__DATA_REGION_ORIGIN__+0x24>
-	OCR1A = 0x10;
- 39e:	20 e1       	ldi	r18, 0x10	; 16
- 3a0:	30 e0       	ldi	r19, 0x00	; 0
- 3a2:	30 93 89 00 	sts	0x0089, r19	; 0x800089 <__DATA_REGION_ORIGIN__+0x29>
- 3a6:	20 93 88 00 	sts	0x0088, r18	; 0x800088 <__DATA_REGION_ORIGIN__+0x28>
+	
+	// 20 intervals of 50 ms per second 
+	// 1 second = 8 000 000 / 1024 = 7812.5 
+	// 1 second divided by 20 intervals = 7812.5/ 20 = 390.625 = 0x187
+	OCR1A = 0x187;	
+ 396:	27 e8       	ldi	r18, 0x87	; 135
+ 398:	31 e0       	ldi	r19, 0x01	; 1
+ 39a:	30 93 89 00 	sts	0x0089, r19	; 0x800089 <__DATA_REGION_ORIGIN__+0x29>
+ 39e:	20 93 88 00 	sts	0x0088, r18	; 0x800088 <__DATA_REGION_ORIGIN__+0x28>
+	TCNT1 = 0x0;
+ 3a2:	10 92 85 00 	sts	0x0085, r1	; 0x800085 <__DATA_REGION_ORIGIN__+0x25>
+ 3a6:	10 92 84 00 	sts	0x0084, r1	; 0x800084 <__DATA_REGION_ORIGIN__+0x24>
         q->next = p;
     }
 }
@@ -856,18 +859,16 @@ ISR(PCINT1_vect){
  4b4:	bf 93       	push	r27
  4b6:	ef 93       	push	r30
  4b8:	ff 93       	push	r31
-	else{
-		down = false;
-		pressed = false;
-	} 
-	
 	if (!pressed && down){
+		yield();
+		pressed = true;
+	}
+	*/
+	if (( PINB & 1<<PB7) == 0){
  4ba:	1f 9b       	sbis	0x03, 7	; 3
 		yield();
  4bc:	0e 94 31 02 	call	0x462	; 0x462 <yield>
-		pressed = true;
 	}
-	
 	
 }
  4c0:	ff 91       	pop	r31
@@ -890,7 +891,7 @@ ISR(PCINT1_vect){
 
 000004e2 <__vector_7>:
 
-ISR (TIMER1_COMPA_vect){
+ISR(TIMER1_COMPA_vect){
  4e2:	1f 92       	push	r1
  4e4:	0f 92       	push	r0
  4e6:	0f b6       	in	r0, 0x3f	; 63
@@ -908,7 +909,7 @@ ISR (TIMER1_COMPA_vect){
  4fe:	bf 93       	push	r27
  500:	ef 93       	push	r30
  502:	ff 93       	push	r31
-		yield();
+	yield();
  504:	0e 94 31 02 	call	0x462	; 0x462 <yield>
 }
  508:	ff 91       	pop	r31

@@ -11,6 +11,7 @@
 #define NTHREADS        4
 #define SETSTACK(buf,a) *((unsigned int *)(buf)+8) = (unsigned int)(a) + STACKSIZE - 4; \
                         *((unsigned int *)(buf)+9) = (unsigned int)(a) + STACKSIZE - 4
+						
 
 struct thread_block {
     void (*function)(int);   // code to run
@@ -48,14 +49,18 @@ static void initialize(void) {
 	// Initialize for timer 
 	
 	// Enable timer output compare A interrupts 
-	TIMSK1 = (1<<OCIE1B) | TIMSK1;
+	TIMSK1 = (1<<OCIE1A) | TIMSK1;
 	// Turn on OC1A compare match
-	TCCR1A = (1<<COM1A0) | TCCR1A;
+	TCCR1A = (1<<COM1A0) | (1<<COM1A1) | TCCR1A;
 	// Set timer to clear on timer compare (CTC) and timer prescaling factor 1024 
-	TCCR1B = (1<<WGM13) | (1<<WGM12) | (1<<CS12) | (1<<CS10) | TCCR1B;
-		
-	TCNT1 = 0;
-	OCR1A = 0x10;
+	TCCR1B = (1<<WGM12) | (1<<CS12) | (1<<CS10) | TCCR1B;
+	
+	// 20 intervals of 50 ms per second 
+	// 1 second = 8 000 000 / 1024 = 7812.5 
+	// 1 second divided by 20 intervals = 7812.5/ 20 = 390.625 = 0x187
+	OCR1A = 0x187;	
+	TCNT1 = 0x0;
+	
 }
 
 static void enqueue(thread p, thread *queue) {
@@ -119,9 +124,10 @@ void yield(void) {
 }
 
 ISR(PCINT1_vect){
+	/*
 	bool down = false;
 	bool pressed = false;
-	if ((( PINB & 1<<PB7) == 0)){
+	if (( PINB & 1<<PB7) == 0){
 		down = true;
 	}
 	else{
@@ -133,18 +139,48 @@ ISR(PCINT1_vect){
 		yield();
 		pressed = true;
 	}
-	
+	*/
+	if (( PINB & 1<<PB7) == 0){
+		yield();
+	}
 	
 }
 
-ISR (TIMER1_COMPA_vect){
-		yield();
+ISR(TIMER1_COMPA_vect){
+	yield();
 }
 
 void lock(mutex *m) {
-
+	ENABLE();
+	//If the mutex isn't locked, lock it
+	if ((m->locked) == 0){
+		m->locked = 1;
+	}
+	//if the mutex is locked, add the thread to the wait queue and change to the next thread in the ready queue
+	else {
+		enqueue(current, &(m->waitQ));
+		dispatch(dequeue(&readyQ));
+	}
+	DISABLE();
+	
 }
 
 void unlock(mutex *m) {
-
+	ENABLE();
+	//If the wait queue isn't empty, add the current thread to the ready queue and go ot the next thread in the wait queue
+	if (m->waitQ != NULL){
+		enqueue(current, &readyQ);
+		dispatch(dequeue(&(m->waitQ)));
+	}
+	//If the wait queue is empty, unlock the mutex and continue in the current thread
+	else  {
+		m->locked = 0;
+	}
+	DISABLE();
+	
 }
+
+/*
+The mutex adds the threads to a waiting queue if they cannot continue, but can still change between threads.
+The ENABLE/DISABLE turns off the ability to cause interruptions, ex timer or button.
+*/
