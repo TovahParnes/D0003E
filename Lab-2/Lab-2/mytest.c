@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <avr/io.h>
 
+int pp;
+mutex m = MUTEX_INIT;
+
 void LCDInit(void){
 	//Set drive time to 300 milliseconds and contrast control voltage to 3.35 V
 	LCDCCR = (1 << LCDCC3) | (1 << LCDCC2) | (1 << LCDCC1) | (1 << LCDCC0);
@@ -89,10 +92,13 @@ bool is_prime(long i){
 }
 
 void printAt(long num, int pos) {
-    int pp = pos;
+    lock(&m);
+    pp = pos;
     writeChar( (num % 100) / 10 + '0', pp);
+    //for(volatile int i  = 0; i < 10000; i++){}
     pp++;
     writeChar( num % 10 + '0', pp);
+    unlock(&m);
 }
 
 void computePrimes(int pos) {

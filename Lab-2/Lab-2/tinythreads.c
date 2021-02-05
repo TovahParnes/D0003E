@@ -117,10 +117,10 @@ void spawn(void (* function)(int), int arg) {
 }
 
 void yield(void) {
-	ENABLE();
+	DISABLE();
 	enqueue(current, &readyQ);
 	dispatch(dequeue(&readyQ));
-	DISABLE();
+	ENABLE();
 }
 
 ISR(PCINT1_vect){
@@ -151,7 +151,7 @@ ISR(TIMER1_COMPA_vect){
 }
 
 void lock(mutex *m) {
-	ENABLE();
+	DISABLE();
 	//If the mutex isn't locked, lock it
 	if ((m->locked) == 0){
 		m->locked = 1;
@@ -161,12 +161,12 @@ void lock(mutex *m) {
 		enqueue(current, &(m->waitQ));
 		dispatch(dequeue(&readyQ));
 	}
-	DISABLE();
+	ENABLE();
 	
 }
 
 void unlock(mutex *m) {
-	ENABLE();
+	DISABLE();
 	//If the wait queue isn't empty, add the current thread to the ready queue and go ot the next thread in the wait queue
 	if (m->waitQ != NULL){
 		enqueue(current, &readyQ);
@@ -176,7 +176,7 @@ void unlock(mutex *m) {
 	else  {
 		m->locked = 0;
 	}
-	DISABLE();
+	ENABLE();
 	
 }
 
