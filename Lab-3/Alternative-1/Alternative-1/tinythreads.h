@@ -7,6 +7,8 @@
 #ifndef _TINYTHREADS_H
 #define _TINYTHREADS_H
 
+int blinkCounter;
+
 struct thread_block;
 typedef struct thread_block *thread;
 void spawn(void (*code)(int), int arg);
@@ -22,7 +24,7 @@ typedef struct mutex_block mutex;
 void lock(mutex *m);
 void unlock(mutex *m);
 
-extern int blinkCounter;
+
 
 #endif
 

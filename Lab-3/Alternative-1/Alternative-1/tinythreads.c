@@ -125,31 +125,11 @@ void yield(void) {
 }
 
 ISR(PCINT1_vect){
-	/*
-	bool down = false;
-	bool pressed = false;
-	if (( PINB & 1<<PB7) == 0){
-		down = true;
-	}
-	else{
-		down = false;
-		pressed = false;
-	} 
-	
-	if (!pressed && down){
-		yield();
-		pressed = true;
-	}
-	*/
-	if (( PINB & 1<<PB7) == 0){
-		yield();
-	}
-	
 }
 
 ISR(TIMER1_COMPA_vect){
-	yield();
 	blinkCounter++;
+	yield();
 }
 
 void lock(mutex *m) {

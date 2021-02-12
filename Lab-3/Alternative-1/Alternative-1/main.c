@@ -142,11 +142,11 @@ void button(int pos){
 }
 
 
-void blink(void){
+void blink(int counterMax){
 	while (true)
 	{
-		if (blinkCounter >= 20)
-		{
+		printAt(blinkCounter, 9);
+		if (blinkCounter >= counterMax){
 			LCDDR18 ^= 0x1;
 			printAt(12, 0);
 			blinkCounter = 0;
@@ -163,6 +163,7 @@ int main(void)
 	LCDInit();
 	spawn(computePrimes, 0);
 	spawn(button, 3);
-	blink();
+	//spawn(blink, 5);
+	blink(20);
 }
 
