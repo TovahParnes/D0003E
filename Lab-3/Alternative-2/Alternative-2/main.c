@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include "tinythreads.h"
 
+
+
 void LCDInit(void){
 
 	//Set drive time to 300 milliseconds and contrast control voltage to 3.35 V
@@ -122,36 +124,48 @@ void computePrimes(int pos) {
 void button(int pos){
 	// Activate the pull-up register for bit 7
 	PORTB = (1<<PB7) | PORTB;
-	bool down = false;
-	long count = 0;
 	
-
-	while (true){
+	long count = 0;
+	bool down = false;
+	/*
+	while (1)
+	{
 		down = false;
-		//Loop for the duration that the joystick is pressed down
-		while (( PINB & 1<<PB7) == 0){
-			//Run only on the first loop of being pressed down
-			if(!down){
-				down = true;
-				
-				count++;
-				printAt(count, pos);
-			}
+		lock(&mutexButton);
+		if(!down){
+			down = true;
+			
+			count++;
+			printAt(count, pos);
 		}
+	}*/
+	
+	bool risingEdge = false;
+
+	
+	while (1){
+		
+
+		lock(&mutexButton);
+		if (!risingEdge)
+		{
+			count++;
+			printAt(count, pos);
+		}
+		risingEdge = !risingEdge;
+		
+		
+		
+		
+		
 	}
 }
 
 
-void blink(int counterMax){
-	while (true)
-	{
-		//Only works with this line of code!!!
-		printAt(blinkCounter, 9);
-		if (blinkCounter >= counterMax){
-			LCDDR18 ^= 0x1;
-			printAt(12, 0);
-			blinkCounter = 0;
-		}
+void blink(int t){
+	while(1){
+		lock(&mutexBlink);
+		LCDDR18 ^= 0x1;
 	}
 }
 
@@ -162,9 +176,12 @@ int main(void)
 	CLKPR = 0x00;
 
 	LCDInit();
-	spawn(computePrimes, 0);
+	
+	lock(&mutexButton);
+	lock(&mutexBlink);
+	
 	spawn(button, 3);
-	//spawn(blink, 5);
-	blink(20);
+	spawn(blink, 20);
+	computePrimes(0);
 }
 
