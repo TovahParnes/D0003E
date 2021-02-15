@@ -598,9 +598,9 @@ static void initialize(void) {
  316:	80 81       	ld	r24, Z
  318:	80 68       	ori	r24, 0x80	; 128
  31a:	80 83       	st	Z, r24
-	PORTB = (1<<PB7) | PORTB;
+	PORTB = (1<<PB0) | PORTB;
  31c:	85 b1       	in	r24, 0x05	; 5
- 31e:	80 68       	ori	r24, 0x80	; 128
+ 31e:	81 60       	ori	r24, 0x01	; 1
  320:	85 b9       	out	0x05, r24	; 5
 	
 	// Initialize for timer 
@@ -873,8 +873,8 @@ ISR(PCINT1_vect){
  4cc:	ef 93       	push	r30
  4ce:	ff 93       	push	r31
 	//Only spawn on the ricing edge
-	if (( PINB & 1<<PB7) == 0){
- 4d0:	1f 99       	sbic	0x03, 7	; 3
+	if (( PINB & 1<<PB0) == 0){
+ 4d0:	18 99       	sbic	0x03, 0	; 3
  4d2:	08 c0       	rjmp	.+16     	; 0x4e4 <__vector_3+0x36>
 		DISABLE();
  4d4:	f8 94       	cli

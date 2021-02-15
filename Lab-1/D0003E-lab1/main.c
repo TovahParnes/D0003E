@@ -154,12 +154,12 @@ void blink(void){
 
 void button(void){
 	// Activate the pull-up register for bit 7
-	PORTB = (1<<PB7) | PORTB;
+	PORTB = (1<<PE7) | PORTB;
 	
 	while (true){
 		down = false;
 		//Loop for the duration that the joystick is pressed down
-		while (( PINB & 1<<PB7) == 0){
+		while (( PINB & 1<<PE7) == 0){
 			//Run only on the first loop of being pressed down
 			if(!down){
 				down = true;
@@ -216,22 +216,7 @@ void button2(void){
 			}
 		}
 	}
-	
-	//Why does it not work???
-	/*
-	if ((PINB & 1<<PB7) == 0)
-	{
-		down = true;
-	} else {
-		down = false;
-	}
-		
-	if(down){
-		writeChar('A', 0);
-		uint16_t var = LCDDR13;
-		var ^= 0x1;
-	}
-	*/
+
 }
 
 void combined(void){
