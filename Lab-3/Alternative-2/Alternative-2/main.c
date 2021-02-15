@@ -127,37 +127,11 @@ void button(int pos){
 	
 	long count = 0;
 	bool down = false;
-	/*
-	while (1)
-	{
-		down = false;
-		lock(&mutexButton);
-		if(!down){
-			down = true;
-			
-			count++;
-			printAt(count, pos);
-		}
-	}*/
-	
-	bool risingEdge = false;
-
 	
 	while (1){
-		
-
 		lock(&mutexButton);
-		if (!risingEdge)
-		{
-			count++;
-			printAt(count, pos);
-		}
-		risingEdge = !risingEdge;
-		
-		
-		
-		
-		
+		count++;
+		printAt(count, pos);
 	}
 }
 

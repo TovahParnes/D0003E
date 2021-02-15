@@ -119,7 +119,9 @@ void spawn(void (* function)(int), int arg) {
 }
 
 ISR(PCINT1_vect){
-	unlock(&mutexButton);
+	if (( PINB & 1<<PB7) == 0){
+		unlock(&mutexButton);
+	}
 }
 
 ISR(TIMER1_COMPA_vect){
@@ -139,7 +141,6 @@ void lock(mutex *m) {
 		m->locked = 1;
 	}
 	ENABLE();
-	
 }
 
 void unlock(mutex *m) {
@@ -151,7 +152,6 @@ void unlock(mutex *m) {
 	//Go to the next thread in the ready queue
 	dispatch(dequeue(&readyQ));
 	ENABLE();
-	
 }
 
 /*
