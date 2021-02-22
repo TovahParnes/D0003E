@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include "tinythreads.h"
 
-
+mutex m = MUTEX_INIT;
 
 void LCDInit(void){
 
@@ -86,6 +86,7 @@ void writeChar(char ch, int pos){
 
 		//Write the current nibble to the LCD
 		*addrLCD = (*addrLCD & mask) | nibbleNum;
+		
 
 		//Move to the next nibble sequence of the current digit on the LCD
 		addrLCD += 5;
@@ -103,10 +104,12 @@ int is_prime(long i){
 }
 
 void printAt(long num, int pos) {
+	lock(&m);
 	int pp = pos;
 	writeChar( (num % 100) / 10 + '0', pp);
 	pp++;
 	writeChar( num % 10 + '0', pp);
+	unlock(&m);
 }
 
 
@@ -126,7 +129,6 @@ void button(int pos){
 	PORTB = (1<<PB7) | PORTB;
 	
 	long count = 0;
-	bool down = false;
 	
 	while (1){
 		lock(&mutexButton);

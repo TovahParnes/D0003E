@@ -12,6 +12,7 @@
 #include "tinythreads.h"
 
 int count = -1;
+mutex m = MUTEX_INIT;
 
 void LCDInit(void){
 
@@ -106,10 +107,12 @@ int is_prime(long i){
 }
 
 void printAt(long num, int pos) {
+	lock(&m);
 	int pp = pos;
 	writeChar( (num % 100) / 10 + '0', pp);
 	pp++;
 	writeChar( num % 10 + '0', pp);
+	unlock(&m);
 }
 
 

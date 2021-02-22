@@ -132,6 +132,7 @@ ISR(TIMER1_COMPA_vect){
 	yield();
 }
 
+
 void lock(mutex *m) {
 	DISABLE();
 	//If the mutex isn't locked, lock it
@@ -161,7 +162,6 @@ void unlock(mutex *m) {
 	ENABLE();
 	
 }
-
 /*
 The mutex adds the threads to a waiting queue if they cannot continue, but can still change between threads.
 The ENABLE/DISABLE turns off the ability to cause interruptions, ex timer or button.

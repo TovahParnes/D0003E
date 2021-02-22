@@ -114,7 +114,8 @@ void spawn(void (* function)(int), int arg) {
     }
     SETSTACK(&newp->context, &newp->stack);
 
-    enqueue(newp, &readyQ);
+    enqueue(current, &readyQ);
+	dispatch(newp);
 	ENABLE();
 }
 
@@ -137,7 +138,7 @@ void lock(mutex *m) {
 	}
 	//If the mutex isn't locked, lock it, and add the current thread to the ready queue
 	else {
-		enqueue (current, &readyQ);
+		//enqueue (current, &readyQ);
 		m->locked = 1;
 	}
 	ENABLE();
@@ -147,10 +148,13 @@ void unlock(mutex *m) {
 	DISABLE();
 	//If the wait queue isn't empty, add the current thread to the ready queue
 	if (m->waitQ != NULL){
-		enqueue(m->waitQ, &readyQ);
+		enqueue(current, &readyQ);
+		dispatch(dequeue(&(m->waitQ)));
+	} else {
+		m->locked = 0;
 	}
 	//Go to the next thread in the ready queue
-	dispatch(dequeue(&readyQ));
+	
 	ENABLE();
 }
 

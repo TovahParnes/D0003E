@@ -11,14 +11,19 @@
 #include "LCD.h"
 #include "Button.h"
 #include "TinyTimber.h"
+#include "PulseGenerator.h"
+
+
+
 
 int main(void)
 {
     LCD_INIT();
     Button_INIT();
+	generatePulse(){
     while (1) 
     {
-		printAt(12345, 0);
+		printAt(1234, 0);
     }
 }
 

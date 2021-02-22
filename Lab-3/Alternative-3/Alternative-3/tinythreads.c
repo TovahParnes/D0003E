@@ -112,9 +112,10 @@ void spawn(void (* function)(int), int arg) {
     }
     SETSTACK(&newp->context, &newp->stack);
 
-    enqueue(newp, &readyQ);
+	enqueue(current, &readyQ);
+    dispatch(newp);
 	ENABLE();
-	dispatch(dequeue(&readyQ));
+	
 }
 
 ISR(PCINT1_vect){
@@ -131,7 +132,36 @@ ISR(PCINT1_vect){
 ISR(TIMER1_COMPA_vect){
 	DISABLE();
 	//enqueue(current, &readyQ);
-	spawn(blink, 20);
+	spawn(blink, 0);
 	//dispatch(dequeue(&readyQ));
+	ENABLE();
+}
+
+void lock(mutex *m) {
+	DISABLE();
+	//if the mutex is locked, add the thread to the wait queue and change to the next thread in the ready queue
+	if (m->locked){
+		enqueue(current, &(m->waitQ));
+		dispatch(dequeue(&readyQ));
+	}
+	//If the mutex isn't locked, lock it, and add the current thread to the ready queue
+	else {
+		//enqueue (current, &readyQ);
+		m->locked = 1;
+	}
+	ENABLE();
+}
+
+void unlock(mutex *m) {
+	DISABLE();
+	//If the wait queue isn't empty, add the current thread to the ready queue
+	if (m->waitQ != NULL){
+		enqueue(current, &readyQ);
+		dispatch(dequeue(&(m->waitQ)));
+		} else {
+		m->locked = 0;
+	}
+	//Go to the next thread in the ready queue
+	
 	ENABLE();
 }

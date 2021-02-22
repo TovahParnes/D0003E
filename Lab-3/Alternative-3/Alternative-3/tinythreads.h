@@ -19,6 +19,9 @@ struct mutex_block {
 typedef struct mutex_block mutex;
 
 #define MUTEX_INIT {0,0}
+	
+void lock(mutex *m);
+void unlock(mutex *m);
 
 void blink(int pos);
 void button(int pos);

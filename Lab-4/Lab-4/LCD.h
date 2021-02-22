@@ -12,5 +12,6 @@
 struct LCD_block;
 
 void LCD_INIT(void);
+void printAt(long, int);
 
 #endif /* LCD_H_ */

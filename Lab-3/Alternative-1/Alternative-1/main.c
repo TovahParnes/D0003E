@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include "tinythreads.h"
 
+mutex m = MUTEX_INIT;
+
 void LCDInit(void){
 
 	//Set drive time to 300 milliseconds and contrast control voltage to 3.35 V
@@ -32,6 +34,7 @@ void LCDInit(void){
 }
 
 void writeChar(char ch, int pos){
+
 	if (pos < 0 || pos > 5){
 		return;
 	}
@@ -101,10 +104,12 @@ int is_prime(long i){
 }
 
 void printAt(long num, int pos) {
+	lock(&m);
 	int pp = pos;
 	writeChar( (num % 100) / 10 + '0', pp);
 	pp++;
 	writeChar( num % 10 + '0', pp);
+	unlock(&m);
 }
 
 
@@ -164,7 +169,6 @@ int main(void)
 	LCDInit();
 	spawn(computePrimes, 0);
 	spawn(button, 3);
-	//spawn(blink, 5);
 	blink(20);
 }
 

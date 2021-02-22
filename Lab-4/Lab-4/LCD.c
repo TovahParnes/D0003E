@@ -13,6 +13,10 @@
 
 
  void LCD_INIT(void){
+	 // LCD
+	 CLKPR = 0x80;
+	 CLKPR = 0x00;
+	 
 	//Set drive time to 300 milliseconds and contrast control voltage to 3.35 V
 	LCDCCR = (1 << LCDCC3) | (1 << LCDCC2) | (1 << LCDCC1) | (1 << LCDCC0);
 	
