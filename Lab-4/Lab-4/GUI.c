@@ -9,26 +9,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdbool.h>
-#include "LCD.h"
-
-
- void LCD_INIT(void){
-	 // LCD
-	 CLKPR = 0x80;
-	 CLKPR = 0x00;
-	 
-	//Set drive time to 300 milliseconds and contrast control voltage to 3.35 V
-	LCDCCR = (1 << LCDCC3) | (1 << LCDCC2) | (1 << LCDCC1) | (1 << LCDCC0);
-	
-	//Set external clock source, 1/3 bias, 1/4 duty cycle, 25 segments
-	LCDCRB = (1 << LCDCS) | (1 << LCDMUX1) | (1 << LCDMUX0) | (1 << LCDPM2) | (1 << LCDPM1) | (1 << LCDPM0);
-
-	//Set prescaler setting N=16 and clock divide settings D=8
-	LCDFRR = (1 << LCDCD2) | (1 << LCDCD1) | (1 << LCDCD0);
-
-	//Enable low power waveform, no frame interrupt, no blanking, LCD enable
-	LCDCRA = (1 << LCDAB) | (1 << LCDEN);
-}
+#include "GUI.h"
 
 void writeChar(char ch, int pos){
 	if (pos < 0 || pos > 5){
@@ -89,9 +70,35 @@ void writeChar(char ch, int pos){
 	}
 }
 
-void printAt(long num, int pos) {
-	int pp = pos;
+void printAt(GUI *self, int num) {
+	int pp = self->current * 4;
 	writeChar( (num % 100) / 10 + '0', pp);
 	pp++;
 	writeChar( num % 10 + '0', pp);
 }
+
+ void LCD_INIT(void){
+	 // LCD
+	 CLKPR = 0x80;
+	 CLKPR = 0x00;
+	 
+	 //Set drive time to 300 milliseconds and contrast control voltage to 3.35 V
+	 LCDCCR = (1 << LCDCC3) | (1 << LCDCC2) | (1 << LCDCC1) | (1 << LCDCC0);
+	 
+	 //Set external clock source, 1/3 bias, 1/4 duty cycle, 25 segments
+	 LCDCRB = (1 << LCDCS) | (1 << LCDMUX1) | (1 << LCDMUX0) | (1 << LCDPM2) | (1 << LCDPM1) | (1 << LCDPM0);
+
+	 //Set prescaler setting N=16 and clock divide settings D=8
+	 LCDFRR = (1 << LCDCD2) | (1 << LCDCD1) | (1 << LCDCD0);
+
+	 //Enable low power waveform, no frame interrupt, no blanking, LCD enable
+	 LCDCRA = (1 << LCDAB) | (1 << LCDEN);
+	 
+	 asm("nop");
+	 
+	 LCDDR1 = (1 << 2);
+	 writeChar('0', 0);
+	 writeChar('0', 1);
+	 writeChar('0', 4);
+	 writeChar('0', 5);
+ }

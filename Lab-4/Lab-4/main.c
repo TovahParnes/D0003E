@@ -5,25 +5,20 @@
  * Author : Tovah
  */ 
 
-#include <avr/io.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include "LCD.h"
+#include "GUI.h"
 #include "Button.h"
 #include "TinyTimber.h"
 #include "PulseGenerator.h"
+#include "InputHandler.h"
 
-
-
+PortWriter		portWriter	 = initPortWriter();
+GUI				gui			 = initGUI();
+PulseGenerator	pG1		 = initPulseGenerator(&portWriter, &gui, 4);
+PulseGenerator	pG2		 = initPulseGenerator(&portWriter, &gui, 6);
+InputHandler	inputHandler = initInputHandler(&gui, &pG1, &pG2);
 
 int main(void)
 {
-    LCD_INIT();
-    Button_INIT();
-	generatePulse(){
-    while (1) 
-    {
-		printAt(1234, 0);
-    }
+	return TINYTIMBER(&inputHandler, initialize, NULL);
 }
 

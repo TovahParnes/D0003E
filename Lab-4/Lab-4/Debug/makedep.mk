@@ -4,7 +4,9 @@
 
 Button.c
 
-LCD.c
+InputHandler.c
+
+GUI.c
 
 main.c
 

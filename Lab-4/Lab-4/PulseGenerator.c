@@ -12,20 +12,27 @@
 #include "PulseGenerator.h"
 #include "Writing.h"
 
-typedef struct {
-	Object super;
-	PortWriter *pw;
-	int pin, frequency, savedFreq;
-	bool isHigh;
-} PulseGenerator;
-
 
 void generatePulse(PulseGenerator *self){
+	volatile int t = self->isHigh;
 	self->isHigh = !self->isHigh;
-	AFTER(MSEC(500), self, generatePulse, NULL);
+	t = self->isHigh;
+	//AFTER(MSEC(500), self, generatePulse, NULL);
+	ASYNC(self, generatePulse, NULL);
 	
-	int temp[] = {self->isHigh, self->pin};
-	ASYNC(self->pw, writeToPin, temp);
+	//int temp[] = {self->isHigh, self->pin};
+	//ASYNC(self->pw, writeToPin, temp);
+	
+	volatile int p = self->pin;
+	
+	if (self->pin == 4){
+		LCDDR13 ^= 0x1;
+	} 
+	if (self->pin == 0)
+	{
+		LCDDR18 ^= 0x1;
+	}
+	
 	
 	/*
 	if(self->frequency == 0){

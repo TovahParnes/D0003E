@@ -12,9 +12,6 @@
 #include "Button.h"
 
 
-#define DISABLE()       cli()
-#define ENABLE()        sei()
-
 void Button_INIT(void){
 	//Initialize for butterfly joystick
 	EIMSK = (1<<PCIE1) | (1<<PCIE0) | EIMSK;

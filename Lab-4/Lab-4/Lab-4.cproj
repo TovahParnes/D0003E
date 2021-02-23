@@ -144,10 +144,16 @@
     <Compile Include="Button.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="LCD.c">
+    <Compile Include="InputHandler.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="LCD.h">
+    <Compile Include="InputHandler.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="GUI.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="GUI.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
