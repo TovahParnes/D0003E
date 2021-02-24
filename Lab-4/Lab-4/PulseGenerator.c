@@ -14,39 +14,23 @@
 
 
 void generatePulse(PulseGenerator *self){
+	volatile int pinTest = self->pin;
 	volatile int t = self->isHigh;
 	self->isHigh = !self->isHigh;
 	t = self->isHigh;
-	//AFTER(MSEC(500), self, generatePulse, NULL);
-	ASYNC(self, generatePulse, NULL);
+	AFTER(MSEC(500), self, generatePulse, NULL);
 	
-	//int temp[] = {self->isHigh, self->pin};
-	//ASYNC(self->pw, writeToPin, temp);
+	int temp[] = {self->isHigh, self->pin};
+	//ASYNC(self, writeToPin, temp); //Should not work but does
+	ASYNC(self->pw, writeToPin, temp); //Should work but doesn't
+
 	
-	volatile int p = self->pin;
-	
-	if (self->pin == 4){
+	if (self->pin == 0){
 		LCDDR13 ^= 0x1;
 	} 
-	if (self->pin == 0)
+	if (self->pin == 6)
 	{
 		LCDDR18 ^= 0x1;
 	}
 	
-	
-	/*
-	if(self->frequency == 0){
-		self->isHigh = 0;
-		
-		AFTER(MSEC(500), self, generatePulse, NULL);
-	}
-	else{
-		self->isHigh = !self->isHigh;
-		
-		AFTER(USEC(500000/self->frequency), self, generatePulse, NULL);
-	}
-	
-	int temp[] = {self->isHigh, self->pin};
-	ASYNC(self->pWriter, writeToPin, temp);
-	*/
 }
