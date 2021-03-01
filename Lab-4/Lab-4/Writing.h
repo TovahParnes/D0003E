@@ -18,6 +18,8 @@ typedef struct {
 #define initPortWriter() \
 { initObject()}
 	
-void writeToPin(PortWriter *self, int args[2]);
+void turnOffPin(PortWriter *self, int pin);
+
+void invertPin(PortWriter *self, int pin);
 
 #endif /* WRITING_H_ */

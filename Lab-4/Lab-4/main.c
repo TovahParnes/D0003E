@@ -17,9 +17,10 @@ int main(void)
 {
 	PortWriter		portWriter	 = initPortWriter();
 	GUI				gui			 = initGUI();
+	PulseGenerator	pG0		 = initPulseGenerator(&portWriter, &gui, 4);
 	PulseGenerator	pG1		 = initPulseGenerator(&portWriter, &gui, 6);
-	PulseGenerator	pG2		 = initPulseGenerator(&portWriter, &gui, 4);
-	InputHandler	inputHandler = initInputHandler(&gui, &pG1, &pG2);
+	PulseGenerator	pG2		 = initPulseGenerator(&portWriter, &gui, 7);
+	InputHandler	inputHandler = initInputHandler(&gui, &pG0, &pG1, &pG2);
 	
 	return TINYTIMBER(&inputHandler, initialize, NULL);
 }

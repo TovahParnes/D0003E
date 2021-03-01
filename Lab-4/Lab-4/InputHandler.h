@@ -15,13 +15,12 @@
 
 typedef struct {
 	Object super;
-	PulseGenerator *pG[2];
+	PulseGenerator *pG[3];
 	GUI *gui;
 	int risingEdge;
 } InputHandler;
 
-#define initInputHandler(pGen1, pGen2, GUI) \
-		{ initObject(), {pGen1, pGen2}, GUI, 1}
+#define initInputHandler(pGen0, pGen1, pGen2, GUI) {initObject(), {pGen0, pGen1, pGen2}, GUI, 1}
 			
 void initialize(InputHandler *self);
 

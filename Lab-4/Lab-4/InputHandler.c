@@ -15,6 +15,6 @@
 
 void initialize(InputHandler *self){
 	SYNC(self->gui, LCD_INIT, NULL);
-	ASYNC(self->pG[0], generatePulse, NULL);
 	ASYNC(self->pG[1], generatePulse, NULL);
+	ASYNC(self->pG[2], generatePulse, NULL);
 }

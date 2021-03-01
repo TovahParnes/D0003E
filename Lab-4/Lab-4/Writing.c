@@ -10,6 +10,6 @@
 #include "TinyTimber.h"
 #include "Writing.h"
 
-void writeToPin(PortWriter *self, int args[]){
-	PINE = (args[0] << args[1]);
+void writeToPin(PortWriter *self, int arg){
+	PINE ^= (1 << arg);
 }

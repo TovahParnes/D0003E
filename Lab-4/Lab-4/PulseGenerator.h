@@ -13,16 +13,14 @@
 #include "Writing.h"
 #include "GUI.h"
 
+#define initPulseGenerator(pw, gui, pin) {initObject(), pw, gui, pin, 0, 0, 0}
 
 typedef struct {
 	Object super;
 	PortWriter *pw;
 	GUI *gui;
-	volatile int pin, freq, savedFreq, isHigh;
+	int pin, freq, savedFreq, isHigh;
 } PulseGenerator;
-
-#define initPulseGenerator(pw, gui, pin) \
-			{initObject(), pw, gui, pin, 0, 0, 0}
 				
 void generatePulse(PulseGenerator *self);
 
