@@ -21,8 +21,10 @@ typedef struct {
 
 void LCD_INIT(void);
 
+void Button_INIT(void);
+
 void printAt(GUI *self, int num);
 
-void switchCurrent(GUI *self);
+void changeCurrent(GUI *self, int arg);
 
 #endif /* LCD_H_ */

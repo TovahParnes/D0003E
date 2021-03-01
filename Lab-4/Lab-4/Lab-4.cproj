@@ -138,12 +138,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Button.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Button.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="InputHandler.c">
       <SubType>compile</SubType>
     </Compile>

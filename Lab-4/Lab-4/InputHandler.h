@@ -24,4 +24,8 @@ typedef struct {
 			
 void initialize(InputHandler *self);
 
+void joystickHorizontal(InputHandler *self);
+
+void joystickVerticalPressed(InputHandler *self);
+
 #endif /* INPUTHANDLER_H_ */

@@ -77,6 +77,19 @@ void printAt(GUI *self, int num) {
 	writeChar( num % 10 + '0', pp);
 }
 
+void changeCurrent(GUI *self, int arg){
+	self->current = arg;
+	printCurrent(self);
+}
+
+void printCurrent(GUI *self){
+	if (self->current == 1){
+		LCDDR1 = (1 << 0);
+	} else if (self->current == 2){
+		LCDDR1 = (1 << 4);
+	}
+}
+
  void LCD_INIT(void){
 	 // LCD
 	 CLKPR = 0x80;
@@ -96,9 +109,34 @@ void printAt(GUI *self, int num) {
 	 
 	 asm("nop");
 	 
-	 LCDDR1 = (1 << 2);
+	 LCDDR1 = (1 << 0);
 	 writeChar('0', 0);
 	 writeChar('0', 1);
 	 writeChar('0', 4);
 	 writeChar('0', 5);
+ }
+ 
+ void Button_INIT(void){
+	 //Initialize for butterfly joystick
+	 EIMSK = (1<<PCIE1) | (1<<PCIE0) | EIMSK;
+	 
+	 //Press down
+	 PORTB = (1<<PB7) | PORTB;
+	 PCMSK1 = (1<<PCINT15) | PCMSK1;
+	 
+	 //Press  upp
+	 PORTB = (1<<PB6) | PORTB;
+	 PCMSK1 = (1<<PCINT14) | PCMSK1;
+	 
+	 //Press right
+	 PORTE = (1<<PE3) | PORTE;
+	 PCMSK0 = (1<<PCINT3) | PCMSK0;
+	 
+	 //Press left
+	 PORTE = (1<<PE2) | PORTE;
+	 PCMSK0 = (1<<PCINT2) | PCMSK0;
+	 
+	 //Press in
+	 PORTB = (1<<PB4) | PORTB;
+	 PCMSK1 = (1<<PCINT12) | PCMSK1;
  }
