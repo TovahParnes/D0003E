@@ -5,11 +5,9 @@
  *  Author: adahed-8
  */ 
 
-   
-#include <avr/io.h>
-#include "TinyTimber.h"
-#include "Writing.h"
 
+#include "Writing.h"
+#include <avr/io.h>
 
 void turnOffPin(PortWriter *self, int pin){
 	writeToPin(0, pin);

@@ -5,13 +5,8 @@
  *  Author: adahed-8
  */ 
 
-
-#include <avr/io.h>
-#include <stdbool.h>
-#include "TinyTimber.h"
 #include "PulseGenerator.h"
-#include "Writing.h"
-
+#include <avr/io.h>
 
 void generatePulse(PulseGenerator *self){
 	if (self->savedFreq == 0){
@@ -24,11 +19,10 @@ void generatePulse(PulseGenerator *self){
 }
 
 void changeFreq(PulseGenerator *self, int value){
-	if ((self->freq + value) >= 0 || (self->freq + value) <= 99){
+	if ((self->freq + value) >= 0 && (self->freq + value) <= 99){
 		self->freq = self->freq + value;
 		ASYNC(self->gui, updateDisplayedFreq, self->freq);
 	}
-	
 }
 
 void saveLoadFreq(PulseGenerator *self){
