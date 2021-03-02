@@ -70,11 +70,10 @@ void writeChar(char ch, int pos){
 	}
 }
 
-void printAt(GUI *self, int num) {
-	int pp = self->current * 4;
-	writeChar( (num % 100) / 10 + '0', pp);
-	pp++;
-	writeChar( num % 10 + '0', pp);
+void printAt(int pos, int num) {
+	writeChar( (num % 100) / 10 + '0', pos);
+	pos++;
+	writeChar( num % 10 + '0', pos);
 }
 
 void changeCurrent(GUI *self, int arg){
@@ -88,6 +87,18 @@ void printCurrent(GUI *self){
 	} else if (self->current == 2){
 		LCDDR1 = (1 << 4);
 	}
+}
+
+void updateDisplayedFreq(GUI *self, int freq){
+	int current = self->current;
+	
+	int pos = 2;
+	if (current == 1){
+		pos = 0;
+	} else if (current == 2) {
+		pos = 4;
+	}
+	printAt(pos, freq);
 }
 
  void LCD_INIT(void){

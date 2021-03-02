@@ -23,8 +23,8 @@ void LCD_INIT(void);
 
 void Button_INIT(void);
 
-void printAt(GUI *self, int num);
-
 void changeCurrent(GUI *self, int arg);
+
+void updateDisplayedFreq(GUI *self, int freq);
 
 #endif /* LCD_H_ */

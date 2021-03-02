@@ -22,8 +22,8 @@ int main(void)
 	PulseGenerator	pG2		 = initPulseGenerator(&portWriter, &gui, 7);
 	InputHandler	inputHandler = initInputHandler(&gui, &pG0, &pG1, &pG2);
 	
-		INSTALL(&inputHandler, joystickHorizontal, IRQ_PCINT0);	// Left & Right
-		INSTALL(&inputHandler, joystickVerticalPressed, IRQ_PCINT1);	// Up, Down & Pressed
+	INSTALL(&inputHandler, joystickHorizontal, IRQ_PCINT0);	// Left & Right
+	INSTALL(&inputHandler, joystickVerticalPressed, IRQ_PCINT1);	// Up, Down & Pressed
 	
 	return TINYTIMBER(&inputHandler, initialize, NULL);
 }

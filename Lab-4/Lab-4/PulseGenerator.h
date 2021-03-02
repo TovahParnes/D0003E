@@ -24,10 +24,8 @@ typedef struct {
 				
 void generatePulse(PulseGenerator *self);
 
-void saveFrec(PulseGenerator *self);
+void changeFreq(PulseGenerator *self, int value);
 
-void loadFrec(PulseGenerator *self);
-
-void changeFrec(PulseGenerator *self);
+void saveLoadFreq(PulseGenerator *self);
 
 #endif /* PULSEGENERATOR_H_ */
