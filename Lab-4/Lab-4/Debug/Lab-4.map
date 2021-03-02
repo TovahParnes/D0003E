@@ -744,15 +744,15 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x2cc8
+.debug_info     0x00000000     0x2cd0
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x7b6 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.6.364/gcc/dev/atmega169p/avr5/crtatmega169p.o
- .debug_info    0x000007b6      0x732 InputHandler.o
- .debug_info    0x00000ee8      0x39f GUI.o
- .debug_info    0x00001287      0x348 main.o
- .debug_info    0x000015cf      0x389 PulseGenerator.o
- .debug_info    0x00001958     0x1178 TinyTimber.o
- .debug_info    0x00002ad0      0x1f8 Writing.o
+ .debug_info    0x000007b6      0x73a InputHandler.o
+ .debug_info    0x00000ef0      0x39f GUI.o
+ .debug_info    0x0000128f      0x348 main.o
+ .debug_info    0x000015d7      0x389 PulseGenerator.o
+ .debug_info    0x00001960     0x1178 TinyTimber.o
+ .debug_info    0x00002ad8      0x1f8 Writing.o
 
 .debug_abbrev   0x00000000     0x10b7
  *(.debug_abbrev)

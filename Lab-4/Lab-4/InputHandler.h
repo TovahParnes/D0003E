@@ -20,7 +20,7 @@
 #define downMask (1 << 7)	
 #define pressMask (1 << 4)
 #define currentPG self->pG[self->gui->current]
-#define waitTime 1000
+#define waitTime 5000
 
 typedef struct {
 	Object super;

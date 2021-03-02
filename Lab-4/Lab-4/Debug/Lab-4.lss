@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 00000260  00000000  00000000  00002428  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00002cc8  00000000  00000000  00002688  2**0
+  6 .debug_info   00002cd0  00000000  00000000  00002688  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000010b7  00000000  00000000  00005350  2**0
+  7 .debug_abbrev 000010b7  00000000  00000000  00005358  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000015f6  00000000  00000000  00006407  2**0
+  8 .debug_line   000015f6  00000000  00000000  0000640f  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000ca8  00000000  00000000  00007a00  2**2
+  9 .debug_frame  00000ca8  00000000  00000000  00007a08  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000009ab  00000000  00000000  000086a8  2**0
+ 10 .debug_str    000009ab  00000000  00000000  000086b0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000028a9  00000000  00000000  00009053  2**0
+ 11 .debug_loc    000028a9  00000000  00000000  0000905b  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000200  00000000  00000000  0000b8fc  2**0
+ 12 .debug_ranges 00000200  00000000  00000000  0000b904  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -159,9 +159,9 @@ void checkContinous(InputHandler *self, bool up){
       fc:	20 e0       	ldi	r18, 0x00	; 0
       fe:	30 e0       	ldi	r19, 0x00	; 0
      100:	a9 01       	movw	r20, r18
-     102:	62 e1       	ldi	r22, 0x12	; 18
-     104:	7a e7       	ldi	r23, 0x7A	; 122
-     106:	80 e0       	ldi	r24, 0x00	; 0
+     102:	6a e5       	ldi	r22, 0x5A	; 90
+     104:	72 e6       	ldi	r23, 0x62	; 98
+     106:	82 e0       	ldi	r24, 0x02	; 2
      108:	90 e0       	ldi	r25, 0x00	; 0
      10a:	0e 94 66 0e 	call	0x1ccc	; 0x1ccc <async>
      10e:	31 c0       	rjmp	.+98     	; 0x172 <checkContinous+0xd8>
@@ -212,9 +212,9 @@ void checkContinous(InputHandler *self, bool up){
      160:	20 e0       	ldi	r18, 0x00	; 0
      162:	30 e0       	ldi	r19, 0x00	; 0
      164:	a9 01       	movw	r20, r18
-     166:	62 e1       	ldi	r22, 0x12	; 18
-     168:	7a e7       	ldi	r23, 0x7A	; 122
-     16a:	80 e0       	ldi	r24, 0x00	; 0
+     166:	6a e5       	ldi	r22, 0x5A	; 90
+     168:	72 e6       	ldi	r23, 0x62	; 98
+     16a:	82 e0       	ldi	r24, 0x02	; 2
      16c:	90 e0       	ldi	r25, 0x00	; 0
      16e:	0e 94 66 0e 	call	0x1ccc	; 0x1ccc <async>
 		}
@@ -455,9 +455,9 @@ void joystickVerticalPressed(InputHandler *self){
      2f6:	20 e0       	ldi	r18, 0x00	; 0
      2f8:	30 e0       	ldi	r19, 0x00	; 0
      2fa:	a9 01       	movw	r20, r18
-     2fc:	62 e1       	ldi	r22, 0x12	; 18
-     2fe:	7a e7       	ldi	r23, 0x7A	; 122
-     300:	80 e0       	ldi	r24, 0x00	; 0
+     2fc:	6a e5       	ldi	r22, 0x5A	; 90
+     2fe:	72 e6       	ldi	r23, 0x62	; 98
+     300:	82 e0       	ldi	r24, 0x02	; 2
      302:	90 e0       	ldi	r25, 0x00	; 0
      304:	0e 94 66 0e 	call	0x1ccc	; 0x1ccc <async>
 	}
@@ -508,9 +508,9 @@ void joystickVerticalPressed(InputHandler *self){
      358:	20 e0       	ldi	r18, 0x00	; 0
      35a:	30 e0       	ldi	r19, 0x00	; 0
      35c:	a9 01       	movw	r20, r18
-     35e:	62 e1       	ldi	r22, 0x12	; 18
-     360:	7a e7       	ldi	r23, 0x7A	; 122
-     362:	80 e0       	ldi	r24, 0x00	; 0
+     35e:	6a e5       	ldi	r22, 0x5A	; 90
+     360:	72 e6       	ldi	r23, 0x62	; 98
+     362:	82 e0       	ldi	r24, 0x02	; 2
      364:	90 e0       	ldi	r25, 0x00	; 0
      366:	0e 94 66 0e 	call	0x1ccc	; 0x1ccc <async>
 	}
