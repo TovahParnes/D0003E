@@ -10,19 +10,17 @@
 #include <avr/io.h>
 
 void turnOffPin(PortWriter *self, int pin){
-	PINE &= ~(1 << pin);
-	blinkDisplay(pin);
+	PORTE &= ~(1 << pin);
+	blinkDisplay(0, pin);
 }
 
 void invertPin(PortWriter *self, int pin){
-	PINE ^= (1 << pin); 
-	blinkDisplay(pin);
+	PORTE ^= (1 << pin); 
+	int temp = (PORTE >> pin) & 1;
+	blinkDisplay(temp, pin);
 }
 
-void blinkDisplay(int pin){
-	int temp = PINE;
-	int value = (temp >> pin) & 1;
-	
+void blinkDisplay(int value, int pin){
 	if (pin == 4){
 		LCDDR13 = value;
 	}

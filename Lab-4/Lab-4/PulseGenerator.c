@@ -10,10 +10,10 @@
 
 void generatePulse(PulseGenerator *self){
 	if (self->savedFreq == 0){
-		SYNC(self->pw, turnOffPin, self->pin);
+		ASYNC(self->pw, turnOffPin, self->pin);
 		AFTER(MSEC(500), self, generatePulse, NULL);
 	} else {
-		SYNC(self->pw, invertPin, self->pin);
+		ASYNC(self->pw, invertPin, self->pin);
 		AFTER(USEC(500000/self->savedFreq), self, generatePulse, NULL);
 	}
 }
@@ -35,7 +35,7 @@ void checkContinous(PulseGenerator *self, int value){
 void changeFreq(PulseGenerator *self, int value){
 	if ((self->freq + value) >= 0 && (self->freq + value) <= 99){
 		self->freq = self->freq + value;
-		SYNC(self->gui, updateDisplayedFreq, self->freq);
+		ASYNC(self->gui, updateDisplayedFreq, self->freq);
 		AFTER(MSEC(waitTime), self, checkContinous, value);
 	}
 }

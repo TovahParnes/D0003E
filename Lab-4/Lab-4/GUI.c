@@ -101,7 +101,7 @@ void updateDisplayedFreq(GUI *self, int freq){
 	printAt(pos, freq);
 }
 
- void LCD_INIT(void){
+ void initLCD(void){
 	 // LCD
 	 CLKPR = 0x80;
 	 CLKPR = 0x00;
@@ -118,8 +118,6 @@ void updateDisplayedFreq(GUI *self, int freq){
 	 //Enable low power waveform, no frame interrupt, no blanking, LCD enable
 	 LCDCRA = (1 << LCDAB) | (1 << LCDEN);
 	 
-	 asm("nop");
-	 
 	 LCDDR1 = (1 << 0);
 	 writeChar('0', 0);
 	 writeChar('0', 1);
@@ -127,7 +125,7 @@ void updateDisplayedFreq(GUI *self, int freq){
 	 writeChar('0', 5);
  }
  
- void Button_INIT(void){
+ void initButtons(void){
 	 //Initialize for butterfly joystick
 	 EIMSK = (1<<PCIE1) | (1<<PCIE0) | EIMSK;
 	 
@@ -150,4 +148,12 @@ void updateDisplayedFreq(GUI *self, int freq){
 	 //Press in
 	 PORTB = (1<<PB4) | PORTB;
 	 PCMSK1 = (1<<PCINT12) | PCMSK1;
+ }
+ 
+ void init(void){
+	 //Set Port E, pin 4 and 6 to output
+	 DDRE   = (1<<DDE6)|(1<<DDE4);
+	 
+	 initLCD();
+	 initButtons();
  }

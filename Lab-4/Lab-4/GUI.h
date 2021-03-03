@@ -19,11 +19,11 @@ typedef struct {
 #define initGUI() \
 		{ initObject(), 0}
 
-void LCD_INIT(void);
-
-void Button_INIT(void);
+void init(void);
 
 void changeCurrent(GUI *self, int arg);
+
+void printCurrent(GUI *self);
 
 void updateDisplayedFreq(GUI *self, int freq);
 

@@ -17,8 +17,8 @@ int main(void)
 {
 	PortWriter		portWriter	 = initPortWriter();
 	GUI				gui			 = initGUI();
-	PulseGenerator	pG1		 = initPulseGenerator(&portWriter, &gui, 4);
-	PulseGenerator	pG2		 = initPulseGenerator(&portWriter, &gui, 6);
+	PulseGenerator	pG1		 = initPulseGenerator(&portWriter, &gui, 4, 80);
+	PulseGenerator	pG2		 = initPulseGenerator(&portWriter, &gui, 6, 80);
 	InputHandler	inputHandler = initInputHandler(&pG1, &pG2, &gui);
 	
 	INSTALL(&inputHandler, joystickHorizontal, IRQ_PCINT0);	// Left & Right

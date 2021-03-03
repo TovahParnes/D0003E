@@ -15,9 +15,9 @@
 
 #define upMask (1 << 6)
 #define downMask (1 << 7)
-#define waitTime 300
+#define waitTime 150
 
-#define initPulseGenerator(pw, gui, pin) {initObject(), pw, gui, pin, 0, 0, 0}
+#define initPulseGenerator(pw, gui, pin, savedFreq) {initObject(), pw, gui, pin, 0, savedFreq, 0}
 
 typedef struct {
 	Object super;

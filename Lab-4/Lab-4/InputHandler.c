@@ -10,15 +10,14 @@
 #include <avr/io.h>
 
 void initialize(InputHandler *self){
-	SYNC(self->gui, LCD_INIT, NULL);
-	SYNC(self->gui, Button_INIT, NULL);
+	SYNC(self->gui, init, NULL);
 	ASYNC(self->pG[0], generatePulse, NULL);
 	ASYNC(self->pG[1], generatePulse, NULL);
 }
 
 void joystickHorizontal(InputHandler *self){
 	int current = self->gui->current;
-	
+
 	//Left
 	if ((PINE & leftMask) == 0){
 		if (current != 0){
