@@ -13,6 +13,10 @@
 #include "Writing.h"
 #include "GUI.h"
 
+#define upMask (1 << 6)
+#define downMask (1 << 7)
+#define waitTime 300
+
 #define initPulseGenerator(pw, gui, pin) {initObject(), pw, gui, pin, 0, 0, 0}
 
 typedef struct {
@@ -23,6 +27,8 @@ typedef struct {
 } PulseGenerator;
 				
 void generatePulse(PulseGenerator *self);
+
+void checkContinous(PulseGenerator *self, int value);
 
 void changeFreq(PulseGenerator *self, int value);
 

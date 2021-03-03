@@ -10,24 +10,24 @@
 #include <avr/io.h>
 
 void turnOffPin(PortWriter *self, int pin){
-	writeToPin(0, pin);
+	PINE &= ~(1 << pin);
+	blinkDisplay(pin);
 }
 
 void invertPin(PortWriter *self, int pin){
-	int value = (PINE & (1 << pin) >> pin);
-	writeToPin(value, pin);
+	PINE ^= (1 << pin); 
+	blinkDisplay(pin);
 }
 
-void writeToPin(int value, int pin){
-	int mask = (1 << pin);
-	PINE = (PINE & ~mask) | ((value << pin) & mask);
-	
+void blinkDisplay(int pin){
+	int temp = PINE;
+	int value = (temp >> pin) & 1;
 	
 	if (pin == 4){
-		LCDDR13 ^= 0x1;
+		LCDDR13 = value;
 	}
 	if (pin == 6)
 	{
-		LCDDR18 ^= 0x1;
+		LCDDR18 = value;
 	}
 }

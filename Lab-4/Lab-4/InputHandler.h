@@ -19,23 +19,19 @@
 #define upMask (1 << 6)
 #define downMask (1 << 7)	
 #define pressMask (1 << 4)
-#define currentPG self->pG[self->gui->current]
-#define waitTime 5000
+
 
 typedef struct {
 	Object super;
-	PulseGenerator *pG[3];
+	PulseGenerator *pG[2];
 	GUI *gui;
-	int risingEdge;
 } InputHandler;
 
-#define initInputHandler(pGen0, pGen1, pGen2, GUI) {initObject(), {pGen0, pGen1, pGen2}, GUI, 1}
+#define initInputHandler(pGen1, pGen2, gui) {initObject(), {pGen1, pGen2}, gui}
 			
 void initialize(InputHandler *self);
 
 void joystickHorizontal(InputHandler *self);
-
-void checkContinous(InputHandler *self, bool up);
 
 void joystickVerticalPressed(InputHandler *self);
 

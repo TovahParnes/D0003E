@@ -82,9 +82,9 @@ void changeCurrent(GUI *self, int arg){
 }
 
 void printCurrent(GUI *self){
-	if (self->current == 1){
+	if (self->current == 0){
 		LCDDR1 = (1 << 0);
-	} else if (self->current == 2){
+	} else if (self->current == 1){
 		LCDDR1 = (1 << 4);
 	}
 }
@@ -93,9 +93,9 @@ void updateDisplayedFreq(GUI *self, int freq){
 	int current = self->current;
 	
 	int pos = 2;
-	if (current == 1){
+	if (current == 0){
 		pos = 0;
-	} else if (current == 2) {
+	} else if (current == 1) {
 		pos = 4;
 	}
 	printAt(pos, freq);

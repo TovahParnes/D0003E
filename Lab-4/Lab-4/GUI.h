@@ -17,7 +17,7 @@ typedef struct {
 } GUI;
 
 #define initGUI() \
-		{ initObject(), 1}
+		{ initObject(), 0}
 
 void LCD_INIT(void);
 

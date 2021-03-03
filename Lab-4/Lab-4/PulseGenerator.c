@@ -18,10 +18,25 @@ void generatePulse(PulseGenerator *self){
 	}
 }
 
+void checkContinous(PulseGenerator *self, int value){
+	if (value == 1){
+		if ((PINB & upMask) == 0){
+			ASYNC(self, changeFreq, value);
+			//AFTER(MSEC(waitTime), self, checkContinous, true);
+		}
+	} else {
+		if ((PINB & downMask) == 0){
+			ASYNC(self, changeFreq, value);
+			//AFTER(MSEC(waitTime), self, checkContinous, false);
+		}
+	}
+}
+
 void changeFreq(PulseGenerator *self, int value){
 	if ((self->freq + value) >= 0 && (self->freq + value) <= 99){
 		self->freq = self->freq + value;
-		ASYNC(self->gui, updateDisplayedFreq, self->freq);
+		SYNC(self->gui, updateDisplayedFreq, self->freq);
+		AFTER(MSEC(waitTime), self, checkContinous, value);
 	}
 }
 
