@@ -11,6 +11,7 @@
 
 #include "TinyTimber.h"
 #include "GUI.h"
+#include "Controller.h"
 
 #define northCar (1 << 0)
 #define northBridge (1 << 1)
@@ -20,11 +21,11 @@
 
 typedef struct {
 	Object super;
-	QueueAndDirection QaD;
+	Controller *controller;
 	GUI *gui;
 } InputHandler;
 
-#define initInputHandler(QaD,gui) {initObject(),QaD, gui}
+#define initInputHandler(controller,gui) {initObject(),controller, gui}
 
 	
 void initialize(InputHandler *self);
