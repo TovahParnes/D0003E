@@ -10,5 +10,7 @@ InputHandler.c
 
 main.c
 
+OutputHandler.c
+
 TinyTimber.c
 

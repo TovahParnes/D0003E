@@ -10,8 +10,9 @@
 #define CARS_H_
 
 #include "TinyTimber.h"
-#include "InputHandler.h"
-
+#include <avr/io.h>
+#include "OutputHandler.h"
+#include "GUI.h"
 
 #define maxCarsBeforeSwap 10
 
@@ -23,10 +24,11 @@ typedef struct {
 	int bridgeQueue;
 	int lights;
 	int carsPassed;
+	OutputHandler *OpH;
 	GUI *gui;
 	}Controller;
 
-#define initQueueAndDirection(gui){initObject(), 0, 0, 0, 0, 0, 0, gui}
+#define initController(OpH, gui){initObject(), 0, 20, 0, 0, 0, 0, OpH, gui}
  
 
 void addQueue (Controller *self, int dir);
@@ -35,7 +37,7 @@ void addBridge (Controller *self, int dir);
 
 void decQueue (Controller *self, int dir);
 
-void decBridge (Controller *self, int dir);
+void decBridge (Controller *self);
 
 int longestQueue (Controller *Self);
 
@@ -48,6 +50,8 @@ void lightGreen(Controller *self, int dir);
 void lightsAddBridge(Controller *self);
 
 void lightsBridgeEmpty(Controller *self);
+
+void initialize(Controller *self);
 
 
 #endif /* CARS_H_ */

@@ -13,6 +13,7 @@
 #include "GUI.h"
 #include "Controller.h"
 
+
 #define northCar (1 << 0)
 #define northBridge (1 << 1)
 #define southCar (1 << 2)
@@ -27,7 +28,6 @@ typedef struct {
 
 #define initInputHandler(controller,gui) {initObject(),controller, gui}
 
-	
-void initialize(InputHandler *self);
+void sensorInterupt (InputHandler *self);
 
 #endif /* INPUTHANDLER_H_ */

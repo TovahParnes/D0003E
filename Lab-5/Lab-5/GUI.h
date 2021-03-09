@@ -19,7 +19,7 @@ typedef struct {
 #define initGUI() \
 		{ initObject(), 0}
 
-void init(void);
+void init(GUI *self);
 
 void initLCD (void); 
 

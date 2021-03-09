@@ -9,11 +9,6 @@
 #include "InputHandler.h"
 #include <avr/io.h>
 
-void initialize(InputHandler *self){
-	SYNC(self->gui, init, NULL);
-
-}
-
 void sensorInterupt (InputHandler *self){
 	
 	if ( UDR0 & northCar ){

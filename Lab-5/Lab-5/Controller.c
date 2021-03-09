@@ -26,7 +26,7 @@ void addBridge (Controller *self, int dir){
 	int temp[2] = {self->bridgeQueue,0}; 
 	ASYNC(self,lightsAddBridge, dir);
 	ASYNC(self->gui,uppdateQueue,temp);
-	AFTER(SEC(5),self, decBridge, dir);
+	AFTER(SEC(5),self, decBridge, NULL);
 
 }
 
@@ -44,7 +44,7 @@ void decQueue (Controller *self, int dir){
 	
 }
 
-void decBridge (Controller *self, int dir){
+void decBridge (Controller *self){
 	self->bridgeQueue--;
 	if (self->bridgeQueue == 0){
 		ASYNC(self,lightsBridgeEmpty,NULL);
@@ -65,31 +65,15 @@ int longestQueue (Controller *self){
 
 
 
-void lightOnOff(Controller *self){
-/*	
-	if (self->QaD->bridgeQueue == 0){
-		if (self->QaD->northQueue >= self->QaD->southQueue){
-			self->nortLight = 1;
-			self->soutLight = 0; // temp 
-			self->lastDir = 1;
-		}
-		else {
-			self->soutLight = 1;
-			self->nortLight = 0; // temp 
-			self->lastDir = 2;
-		}
-	}
-	*/
-}
-
 void lightsRed(Controller *self){
 	self->lights = 0;
-
+	ASYNC(self->OpH, outputLights, self->lights );
 }
 
 void lightGreen(Controller *self, int dir){
 	self->carsPassed =0;
 	self->lights = dir;
+	ASYNC(self->OpH, outputLights, self->lights );
 }
 
 
@@ -125,4 +109,9 @@ void lightsBridgeEmpty(Controller *self){
 			lightGreen(self, 2);
 		}
 	}
+}
+
+void initialize(Controller *self){
+	ASYNC(self->gui, init, NULL);
+	ASYNC(self, lightsRed, NULL); 
 }

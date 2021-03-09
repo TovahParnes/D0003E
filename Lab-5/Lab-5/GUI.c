@@ -94,14 +94,18 @@ void printAt(int pos, int num) {
 	 //Enable low power waveform, no frame interrupt, no blanking, LCD enable
 	 LCDCRA = (1 << LCDAB) | (1 << LCDEN);
 	 
-	 LCDDR1 = (1 << 0);
+	 LCDDR8 = 0x1;
 	 writeChar('0', 0);
 	 writeChar('0', 1);
+	 writeChar('0', 2);
+	 writeChar('0', 3);
 	 writeChar('0', 4);
 	 writeChar('0', 5);
+	 
+	
  }
  
- void init(void){
+ void init(GUI *self){
 	 //Set Port E, pin 4 and 6 to output
 	 DDRE   = (1<<DDE6)|(1<<DDE4);
 	 
