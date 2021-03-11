@@ -11,13 +11,13 @@
 
 void turnOffPin(PortWriter *self, int pin){
 	PORTE &= ~(1 << pin);
-	blinkDisplay(0, pin);
+	//blinkDisplay(0, pin);
 }
 
 void invertPin(PortWriter *self, int pin){
 	PORTE ^= (1 << pin); 
 	int temp = (PORTE >> pin) & 1;
-	blinkDisplay(temp, pin);
+	//blinkDisplay(temp, pin);
 }
 
 void blinkDisplay(int value, int pin){
