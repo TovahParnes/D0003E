@@ -32,7 +32,7 @@ typedef struct {
 	GUI *gui;
 	}Controller;
 
-#define initController(OpH, gui){initObject(),{ 0, 36, 5}, 0, 0, 0, OpH, gui}
+#define initController(OpH, gui){initObject(),{ 0, 0, 0}, 0, 0, 0, OpH, gui}
  
 
 void addQueue (Controller *self, int dir);

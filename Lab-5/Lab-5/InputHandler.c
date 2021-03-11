@@ -20,8 +20,6 @@ void sensorInterupt (InputHandler *self){
 	if ( UDR0 & northBridge ){
 		// North car goes on bridge add total car on bridge
 		ASYNC(self->controller, addBridge, 1);
-		
-		
 	}
 	
 	if ( UDR0 & southCar ){

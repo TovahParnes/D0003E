@@ -115,10 +115,7 @@ void lightsBridge(Controller *self){
 
 void initialize(Controller *self){
 	ASYNC(self->gui, init, NULL);
-	ASYNC(self, lightsRed, NULL); 
-	ASYNC(self, addQueue, 1);
-	ASYNC(self, addQueue, 2);
-	//ASYNC(self, addBridge, 1);
-	//ASYNC(self,addBridge , 1);'
-	ASYNC(self, lightsBridge, NULL);
+	ASYNC(self->gui, displayNorthQueue, self->queue[NORTH]);
+	ASYNC(self->gui, displaySouthQueue, self->queue[SOUTH]);
+	ASYNC(self->gui, displayBridgeQueue, self->queue[BRIDGE]);
 	}
