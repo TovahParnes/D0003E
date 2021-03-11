@@ -15,20 +15,24 @@
 #include "GUI.h"
 
 #define maxCarsBeforeSwap 10
+#define BRIDGE 0
+#define NORTH 1
+#define SOUTH 2
+#define RED 0
+#define NORTHGREEN 1
+#define SOUTHGREEN 2
 
 typedef struct {
 	Object super; 
+	int queue[3];
 	int bridgeDirection;
-	int northQueue;
-	int southQueue; 
-	int bridgeQueue;
 	int lights;
 	int carsPassed;
 	OutputHandler *OpH;
 	GUI *gui;
 	}Controller;
 
-#define initController(OpH, gui){initObject(), 0, 20, 0, 0, 0, 0, OpH, gui}
+#define initController(OpH, gui){initObject(),{ 0, 36, 5}, 0, 0, 0, OpH, gui}
  
 
 void addQueue (Controller *self, int dir);
@@ -50,6 +54,8 @@ void lightGreen(Controller *self, int dir);
 void lightsAddBridge(Controller *self);
 
 void lightsBridgeEmpty(Controller *self);
+
+void lightsBridge(Controller *self);
 
 void initialize(Controller *self);
 

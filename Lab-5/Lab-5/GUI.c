@@ -129,13 +129,29 @@ void printAt(int pos, int num) {
  }
  
 void uppdateQueue (GUI *self,int arg[2]){
-	int pos = 2; 
-	if (arg[1]==1){
+	volatile int temp0 = arg[0];
+	volatile int temp1 = arg[1];
+	int pos;
+	if (arg[0]==1){
 		pos = 0;
 	}
-	else if (arg[1]== 2){
+	else if (arg[0]== 2){
 		pos = 4; 
 		}
+	else {
+		pos = 2;
+	}
 	
-	printAt(arg[0],pos);
+	printAt(pos,arg[1]);
+}
+void displayNorthQueue (GUI *self,int num){
+		printAt(0,num);
+}
+
+void displaySouthQueue (GUI *self,int num){
+		printAt(4,num);
+}
+
+void displayBridgeQueue (GUI *self,int num){
+		printAt(2,num);
 }

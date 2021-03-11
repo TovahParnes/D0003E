@@ -7,106 +7,108 @@
 #include "Controller.h"
 
 void addQueue (Controller *self, int dir){
-	if (dir == 1){
-		self->northQueue++;
-		int temp[2] = {self->northQueue,0};
-		ASYNC(self->gui,uppdateQueue,temp);
+	if (dir == NORTH){
+		self->queue[NORTH]++;
+		ASYNC(self->gui, displayNorthQueue, self->queue[NORTH]);
 	}
-	else if(dir == 2){
-		self->southQueue++;
-		int temp[2] = {self->southQueue,0};
-		ASYNC(self->gui,uppdateQueue,temp);
+	else if(dir == SOUTH){
+		self->queue[SOUTH]++;
+		ASYNC(self->gui, displaySouthQueue, self->queue[SOUTH]);
 	}
 }
 
 void addBridge (Controller *self, int dir){
 	decQueue(self,dir);
 	self->bridgeDirection = dir; 
-	self->bridgeQueue++;
-	int temp[2] = {self->bridgeQueue,0}; 
-	ASYNC(self,lightsAddBridge, dir);
-	ASYNC(self->gui,uppdateQueue,temp);
+	self->carsPassed++;
+	self->queue[BRIDGE]++;
+	ASYNC(self->gui, displayBridgeQueue, self->queue[BRIDGE]);
 	AFTER(SEC(5),self, decBridge, NULL);
 
 }
 
 void decQueue (Controller *self, int dir){
-	if (dir == 1){
-		self->northQueue--;
-		int temp[2] = {self->northQueue,0}; 
-		ASYNC(self->gui,uppdateQueue,temp);
+	if (dir == NORTH){
+		self->queue[NORTH]--;
+		ASYNC(self->gui, displayNorthQueue, self->queue[NORTH]);
 	}
-	else if(dir == 2){
-		self->southQueue--;
-		int temp[2] = {self->southQueue,0}; 
-		ASYNC(self->gui,uppdateQueue,temp);
+	else if(dir == SOUTH){
+		self->queue[SOUTH]--;
+		ASYNC(self->gui, displaySouthQueue, self->queue[SOUTH]);
 	}
-	
 }
 
 void decBridge (Controller *self){
-	self->bridgeQueue--;
-	if (self->bridgeQueue == 0){
-		ASYNC(self,lightsBridgeEmpty,NULL);
+	self->queue[BRIDGE]--;
+	if (self->queue[BRIDGE] == 0){
 	}
-	int temp[2] = {self->bridgeQueue,0}; 
-	ASYNC(self->gui,uppdateQueue,temp);
+	ASYNC(self->gui, displayBridgeQueue, self->queue[BRIDGE]);
 }
 
 
 int longestQueue (Controller *self){
-	if (self->northQueue >= self->southQueue){
-		return 1;
+	if (self->queue[NORTH] >= self->queue[SOUTH]){
+		return NORTH;
 	}
 	else {
-		return 2;
+		return SOUTH;
+	}
+}
+
+int shortestQueue (Controller *self){
+	if (self->queue[NORTH] >= self->queue[SOUTH]){
+		return SOUTH;
+	}
+	else {
+		return NORTH;
 	}
 }
 
 
 
 void lightsRed(Controller *self){
-	self->lights = 0;
+	self->lights = RED;
 	ASYNC(self->OpH, outputLights, self->lights );
 }
 
 void lightGreen(Controller *self, int dir){
-	self->carsPassed =0;
+	self->carsPassed = 0;
 	self->lights = dir;
 	ASYNC(self->OpH, outputLights, self->lights );
 }
 
 
-void lightsAddBridge(Controller *self){
-	self->carsPassed++;
+void lightsBridge(Controller *self){
 	int longest = longestQueue(self);
-	if (longest == self->bridgeDirection){
-		if (self->carsPassed >= maxCarsBeforeSwap){
+	int shortest = shortestQueue(self);
+	if (self->queue[BRIDGE] == 0){
+		lightGreen(self, longest);
+		AFTER(SEC(1), self, lightsBridge, NULL);
+	}
+	else {
+		if (longest == self->bridgeDirection){
+			if (self->carsPassed >= maxCarsBeforeSwap){
+				if (shortest != 0){
+					self->carsPassed == 0;
+					lightsRed(self);
+					AFTER(SEC(5), self, lightGreen, shortest);
+					AFTER(SEC(6), self, lightsBridge, NULL);
+				}
+				else {
+					lightGreen(self, longest);
+					AFTER(SEC(1), self, lightsBridge, NULL);
+				}	
+			} 
+			else {
+				lightGreen(self, longest);
+				AFTER(SEC(1), self, lightsBridge, NULL);
+			}
+		}
+		else {
+			self->carsPassed == 0;
 			lightsRed(self);
-		}
-	}
-	else {
-		lightsRed(self);
-	}
-
-	
-}
-
-void lightsBridgeEmpty(Controller *self){
-	if (self->bridgeDirection == 1){
-		if (self->southQueue != 0){
-			lightGreen(self,2);
-		}
-		else {
-			lightGreen(self, 1);
-		}
-	}
-	else {
-		if (self->northQueue != 0){
-			lightGreen(self,1);
-		}	
-		else {
-			lightGreen(self, 2);
+			AFTER(SEC(5), self, lightGreen, shortest);
+			AFTER(SEC(6), self, lightsBridge, NULL);
 		}
 	}
 }
@@ -114,4 +116,9 @@ void lightsBridgeEmpty(Controller *self){
 void initialize(Controller *self){
 	ASYNC(self->gui, init, NULL);
 	ASYNC(self, lightsRed, NULL); 
-}
+	ASYNC(self, addQueue, 1);
+	ASYNC(self, addQueue, 2);
+	//ASYNC(self, addBridge, 1);
+	//ASYNC(self,addBridge , 1);'
+	ASYNC(self, lightsBridge, NULL);
+	}

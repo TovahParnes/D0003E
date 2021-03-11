@@ -25,6 +25,10 @@ void initLCD (void);
 
 void initUSART (void);
 
-void uppdateQueue (GUI *self,int arg[2]);
+void displayNorthQueue (GUI *self,int num);
+
+void displaySouthQueue (GUI *self,int num);
+
+void displayBridgeQueue (GUI *self,int num);
 
 #endif /* LCD_H_ */
