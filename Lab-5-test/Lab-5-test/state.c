@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <termios.h>
 
-#include "tui.h"
+#include "GUI.h"
 #include "state.h"
 
 
