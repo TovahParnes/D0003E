@@ -18,6 +18,8 @@ typedef struct {
 
 #define initGUI() \
 		{ initObject(), 0}
+			
+void writeChar(char ch, int pos);
 
 void init(GUI *self);
 

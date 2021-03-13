@@ -11,6 +11,7 @@
 
 #include "TinyTimber.h"
 #include <avr/io.h>
+#include <stdint.h>
 
 typedef struct {
 	Object super;

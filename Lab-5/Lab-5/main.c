@@ -23,7 +23,7 @@ int main(void)
 
   InputHandler inputHandler = initInputHandler(&controller, &gui);
   
-  INSTALL (&inputHandler, sensorInterupt, IRQ_USART0_RX);
+  INSTALL (&inputHandler, &sensorInterupt, IRQ_USART0_RX);
   
   return TINYTIMBER(&controller, initialize, NULL);
 

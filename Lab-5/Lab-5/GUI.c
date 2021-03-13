@@ -106,14 +106,12 @@ void printAt(int pos, int num) {
  }
  
  void init(GUI *self){
-	 //Set Port E, pin 4 and 6 to output
-	 DDRE   = (1<<DDE6)|(1<<DDE4);
-	 
 	 initLCD();
+	 initUSART();
  }
  void initUSART (void){
 	 
-	#define FOSC 1843200 
+	#define FOSC 8000000 
 	#define BAUD 9600 
 	#define MYUBRR (FOSC/16/BAUD-1)
 	
@@ -122,15 +120,20 @@ void printAt(int pos, int num) {
 	UBRR0L = (unsigned char)MYUBRR; 
 	
 	// Enable receiver and transmitter receive complete interrupt. 
-	UCSR0B = (1 << 4 ) | (1 << 3)| (1 << 7) ; // Rxen = 4 and txen = 3 RXCIE = 7  
+	//UCSR0B = (1 << 4 ) | (1 << 3)| (1 << 7) ; // Rxen = 4 and txen = 3 RXCIE = 7 
+	
+	UCSR0B |= (1<<RXEN0)  // USART Reciever Enable
+		   |  (1<<TXEN0); // USART Transmitter Enable 
+		   
+	
+	// USART Control and Status Register B
+	UCSR0B |= (1<<RXCIE0);    // RX Complete Interrupt Enable
 	
 	// Set frame format: 8datam 1stop bit , No parity 
 	UCSR0C = (1 << 2 )| (1 << 1); // UCSZ1 = 2  UCSZ0 = 1 
  }
  
 void uppdateQueue (GUI *self,int arg[2]){
-	volatile int temp0 = arg[0];
-	volatile int temp1 = arg[1];
 	int pos;
 	if (arg[0]==1){
 		pos = 0;

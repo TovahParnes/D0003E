@@ -9,20 +9,39 @@
 #ifndef STATE_H_
 #define STATE_H_
 
+#include <semaphore.h>
 #include <stdint.h>
 #include <pthread.h>
-#include <semaphore.h>
+#include <stdio.h>
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
 
-pthread_mutex_t ioMutex;
-sem_t stateLoopSem;
-pthread_mutex_t stateMutex;
+#define BRIDGE 0
+#define NORTH 1
+#define SOUTH 2
+
+#define RED 0
+#define NORTHGREEN 1
+#define SOUTHGREEN 2
+
 sem_t arrivalSem;
-uint64_t arrivalDirection;
+sem_t bridgeEnterSem;
 
-uint64_t carsNorth;
-uint64_t carsSouth;
+pthread_mutex_t stateMutex;
+pthread_mutex_t ioMutex;
+
+uint64_t arrivalDir;
+uint64_t queues[3];
+uint8_t lights;
+int serialPort;
+static struct termios serialSettings;
 
 void initState(void);
 void *arrivalWait(void *arg);
+void arrival(uint64_t dir);
+void *bridgeEnter(void *arg);
+void *carOnBridge(void *arg);
+void *readSerialPort(void *arg);
 
 #endif /* STATE_H_ */

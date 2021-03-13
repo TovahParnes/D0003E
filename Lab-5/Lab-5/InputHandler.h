@@ -28,6 +28,6 @@ typedef struct {
 
 #define initInputHandler(controller,gui) {initObject(),controller, gui}
 
-void sensorInterupt (InputHandler *self);
+void sensorInterupt (InputHandler *self, uint8_t arg);
 
 #endif /* INPUTHANDLER_H_ */

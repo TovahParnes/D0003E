@@ -9,25 +9,26 @@
 #include "InputHandler.h"
 #include <avr/io.h>
 
-void sensorInterupt (InputHandler *self){
+void sensorInterupt (InputHandler *self, uint8_t arg){
+	volatile uint8_t data = UDR0;
 	
-	if ( UDR0 & northCar ){
+	if ((data >> 0) & 1){
 		// add to Nqueue
 		ASYNC(self->controller, addQueue, 1);
-		
 	}
 	
-	if ( UDR0 & northBridge ){
+	else if ( data & northBridge ){
 		// North car goes on bridge add total car on bridge
 		ASYNC(self->controller, addBridge, 1);
 	}
 	
-	if ( UDR0 & southCar ){
+	else if (data & southCar){
 		// add to Squeue
 		ASYNC(self->controller, addQueue, 2);
 	}
 	
-	if ( UDR0 & southBridge ){
+	else if ( data & southBridge ){
+		LCDDR18 ^= 0x1;
 		// South car goes on bridge add total car on bridge
 		ASYNC(self->controller, addBridge, 2);
 	}

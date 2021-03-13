@@ -13,41 +13,38 @@
 #include "state.h"
 
 
-static struct termios oldTerminalSettings, prgmTerminalSettings;
-
-void *draw(void *arg){
-	
+void print(void){
+	CLEAR;
+	pthread_mutex_lock(&stateMutex);
+	switch (lights)
+	{
+		case RED:
+			printf("NorthLight: Red North: %d,	 Bridge: %d,	South: %d SouthLight: Red\n", queues[1], queues[0], queues[2]);
+			break;
+		
+		case NORTHGREEN:
+			printf("NorthLight: Green North: %d,	 Bridge: %d,	 South: %d SouthLight: Red\n", queues[1], queues[0], queues[2]);
+			break;
+			
+		case SOUTHGREEN:
+			printf("NorthLight: Red North: %d,	 Bridge: %d,	South: %d SouthLight: Green\n", queues[1], queues[0], queues[2]);
+			break;
+	}
+	pthread_mutex_unlock(&stateMutex);
 }
 
-void initGUI(void) {
-	printf("Init GUI\n");
-	/*
-	// Get settings of stdin
-	tcgetattr(STDIN_FILENO, &oldTerminalSettings);
+void terminalSettings(void){
+	//copy current settings
+	tcgetattr(STDIN_FILENO, &prgmTerminalSettings);
 
-	// Copy settings 
-	prgmTerminalSettings = oldTerminalSettings;
-
-	// Set new terminal attributes
+	//set new settings
 	prgmTerminalSettings.c_lflag &= ~(ICANON) // Disable input buffer until endl or EOF
 	&  ~(ECHO);  // Don't echo back typed keys
-
-	prgmTerminalSettings.c_cc[VMIN] = 0;      //
-	prgmTerminalSettings.c_cc[VTIME] = 1;     // These two sets polling read
-
-	fcntl(STDIN_FILENO, F_SETFL, O_NONBLOCK);
-
-	//Set new terminal settings
+	
+	//Save new settings
 	tcsetattr(STDIN_FILENO, TCSANOW, &prgmTerminalSettings);
+}
 
-	runTUI = 1;
-	sem_init(&tuiSem, 0, 0);
-
-	CLEAR();
-	//printf("\x1B[35;1H%10d%10d", prgmTerminalSettings.c_cc[VMIN], prgmTerminalSettings.c_cc[VTIME]);
-
-	drawBridge();
-	//printf("here\n");
-	//draw();
-	*/
+void initGUI(void){
+	terminalSettings();
 }

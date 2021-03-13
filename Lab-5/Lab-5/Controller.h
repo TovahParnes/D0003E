@@ -14,7 +14,7 @@
 #include "OutputHandler.h"
 #include "GUI.h"
 
-#define maxCarsBeforeSwap 10
+#define maxCarsBeforeSwap 5
 #define BRIDGE 0
 #define NORTH 1
 #define SOUTH 2
@@ -34,6 +34,7 @@ typedef struct {
 
 #define initController(OpH, gui){initObject(),{ 0, 0, 0}, 0, 0, 0, OpH, gui}
  
+void input(Controller *self, int data);
 
 void addQueue (Controller *self, int dir);
 
@@ -56,6 +57,10 @@ void lightsAddBridge(Controller *self);
 void lightsBridgeEmpty(Controller *self);
 
 void lightsBridge(Controller *self);
+
+void lightsNorth(Controller *self);
+
+void lightsSouth(Controller *self);
 
 void initialize(Controller *self);
 
