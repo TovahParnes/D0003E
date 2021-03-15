@@ -44,19 +44,9 @@ void decQueue (Controller *self, int dir);
 
 void decBridge (Controller *self);
 
-int longestQueue (Controller *Self);
-
-void lightOnOff(Controller *self);
-
 void lightsRed(Controller *self);
 
 void lightGreen(Controller *self, int dir);
-
-void lightsAddBridge(Controller *self);
-
-void lightsBridgeEmpty(Controller *self);
-
-void lightsBridge(Controller *self);
 
 void lightsNorth(Controller *self);
 

@@ -13,7 +13,7 @@
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <AssemblyName>Lab-5-test</AssemblyName>
-    <Name>Lab-5-test</Name>
+    <Name>Lab-5-simulator</Name>
     <RootNamespace>Lab-5-test</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>

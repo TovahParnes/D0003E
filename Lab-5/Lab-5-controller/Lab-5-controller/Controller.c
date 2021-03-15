@@ -45,27 +45,6 @@ void decBridge (Controller *self){
 	ASYNC(self->gui, displayBridgeQueue, self->queue[BRIDGE]);
 }
 
-
-int longestQueue (Controller *self){
-	if (self->queue[NORTH] >= self->queue[SOUTH]){
-		return NORTH;
-	}
-	else {
-		return SOUTH;
-	}
-}
-
-int shortestQueue (Controller *self){
-	if (self->queue[NORTH] >= self->queue[SOUTH]){
-		return SOUTH;
-	}
-	else {
-		return NORTH;
-	}
-}
-
-
-
 void lightsRed(Controller *self){
 	self->carsPassed = 0;
 	self->lights = RED;
@@ -75,53 +54,6 @@ void lightsRed(Controller *self){
 void lightGreen(Controller *self, int dir){
 	self->lights = dir;
 	ASYNC(self->OpH, outputLights, self->lights );
-}
-
-
-void lightsBridge(Controller *self){
-	int longest = longestQueue(self);
-	
-	switch (longest)
-	{
-	case NORTH:
-		lightsNorth(self);
-		break;
-		
-	case SOUTH:
-		lightsSouth(self);
-		break;
-	}
-	
-	/*if (self->queue[BRIDGE] == 0){
-		lightGreen(self, longest);
-		AFTER(SEC(1), self, lightsBridge, NULL);
-	}
-	else {
-		if (longest == self->bridgeDirection){
-			if (self->carsPassed >= maxCarsBeforeSwap){
-				if (shortest != 0){
-					self->carsPassed == 0;
-					lightsRed(self);
-					AFTER(SEC(5), self, lightGreen, shortest);
-					AFTER(SEC(6), self, lightsBridge, NULL);
-				}
-				else {
-					lightGreen(self, longest);
-					AFTER(SEC(1), self, lightsBridge, NULL);
-				}	
-			} 
-			else {
-				lightGreen(self, longest);
-				AFTER(SEC(1), self, lightsBridge, NULL);
-			}
-		}
-		else {
-			self->carsPassed == 0;
-			lightsRed(self);
-			AFTER(SEC(5), self, lightGreen, shortest);
-			AFTER(SEC(6), self, lightsBridge, NULL);
-		}
-	}*/
 }
 
 void lightsNorth(Controller *self){
