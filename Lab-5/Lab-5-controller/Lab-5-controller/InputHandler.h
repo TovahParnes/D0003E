@@ -13,7 +13,7 @@
 #include "GUI.h"
 #include "Controller.h"
 
-
+// Define correct bit masks
 #define northCar (1 << 0)
 #define northBridge (1 << 1)
 #define southCar (1 << 2)
@@ -28,6 +28,6 @@ typedef struct {
 
 #define initInputHandler(controller,gui) {initObject(),controller, gui}
 
-void sensorInterupt (InputHandler *self, uint8_t arg);
+void sensorInterupt (InputHandler *self);
 
 #endif /* INPUTHANDLER_H_ */

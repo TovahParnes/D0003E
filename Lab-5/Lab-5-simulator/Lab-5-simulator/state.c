@@ -41,9 +41,8 @@ void initState(void){
 	serialSettings.c_cflag |= CREAD;	// Enable receive
 	serialSettings.c_cc[VMIN] =  1; // Read at least 1 char
 	
-	//Save serial settings
-	//tcsetattr(serialPort, TCSANOW, &serialSettings);
-	lights = 0;
+	//Start with both lights red
+	lights = RED;
 }
 
 
@@ -78,8 +77,9 @@ void *bridgeEnter(void *arg){
 	printf("Started bridge enter thread\n");
 	while(1){
 		sem_wait(&bridgeEnterSem);
-		pthread_t carThread;
 		
+		//Create car on bridge thread
+		pthread_t carThread;
 		if (pthread_create(&carThread, NULL, carOnBridge, NULL)){
 			printf("Failed to create car thread");
 		}
@@ -140,6 +140,7 @@ void *readSerialPort(void *arg){
 			lights = NORTHGREEN;
 			//printf("read port north green: %d\n", lights);
 			pthread_mutex_unlock(&stateMutex);
+			//Allow one car to enter the bridge
 			sem_post(&bridgeEnterSem);
 			
 		} else if (data == 0b0110) //South green, north red
@@ -148,6 +149,7 @@ void *readSerialPort(void *arg){
 			lights = SOUTHGREEN;
 			//printf("read port south green: %d\n", lights);
 			pthread_mutex_unlock(&stateMutex);
+			//Allow one car to enter the bridge
 			sem_post(&bridgeEnterSem);
 			
 		}

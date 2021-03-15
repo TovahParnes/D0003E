@@ -95,14 +95,6 @@ void printAt(int pos, int num) {
 	 LCDCRA = (1 << LCDAB) | (1 << LCDEN);
 	 
 	 LCDDR8 = 0x1;
-	 writeChar('0', 0);
-	 writeChar('0', 1);
-	 writeChar('0', 2);
-	 writeChar('0', 3);
-	 writeChar('0', 4);
-	 writeChar('0', 5);
-	 
-	
  }
  
  void init(GUI *self){
@@ -120,41 +112,20 @@ void printAt(int pos, int num) {
 	UBRR0L = (unsigned char)MYUBRR; 
 	
 	// Enable receiver and transmitter receive complete interrupt. 
-	//UCSR0B = (1 << 4 ) | (1 << 3)| (1 << 7) ; // Rxen = 4 and txen = 3 RXCIE = 7 
-	
-	UCSR0B |= (1<<RXEN0)  // USART Reciever Enable
-		   |  (1<<TXEN0); // USART Transmitter Enable 
-		   
-	
-	// USART Control and Status Register B
-	UCSR0B |= (1<<RXCIE0);    // RX Complete Interrupt Enable
+	UCSR0B = (1 << RXEN0 ) | (1 << TXEN0)| (1 << RXCIE0) ; 
 	
 	// Set frame format: 8datam 1stop bit , No parity 
-	UCSR0C = (1 << 2 )| (1 << 1); // UCSZ1 = 2  UCSZ0 = 1 
+	UCSR0C = (1 << UCSZ01 )| (1 << UCSZ00); 
  }
  
-void uppdateQueue (GUI *self,int arg[2]){
-	int pos;
-	if (arg[0]==1){
-		pos = 0;
-	}
-	else if (arg[0]== 2){
-		pos = 4; 
-		}
-	else {
-		pos = 2;
-	}
-	
-	printAt(pos,arg[1]);
-}
 void displayNorthQueue (GUI *self,int num){
-		printAt(0,num);
+	printAt(0,num);
 }
 
 void displaySouthQueue (GUI *self,int num){
-		printAt(4,num);
+	printAt(4,num);
 }
 
 void displayBridgeQueue (GUI *self,int num){
-		printAt(2,num);
+	printAt(2,num);
 }

@@ -47,6 +47,7 @@ int main(void)
 		printf("Failed to create bridge enter thread");
 	}
 	
+	//Follow the keyboard input thread
 	pthread_join(keyboardInputThread, NULL);
 }
 
@@ -56,14 +57,18 @@ void *keyboardInput(void *arg){
 	while ( (ch = getchar()) != 'e'){
 		if(ch == 's'){
 			pthread_mutex_lock(&stateMutex);
+			//Set direction of car entering queue
 			arrivalDir = SOUTH;
 			pthread_mutex_unlock(&stateMutex);
+			//Allow one car to enter the queue
 			sem_post(&arrivalSem);
 		}
 		else if(ch == 'n'){
 			pthread_mutex_lock(&stateMutex);
+			//Set direction of car entering queue
 			arrivalDir = NORTH;
 			pthread_mutex_unlock(&stateMutex);
+			//Allow one car to enter the queue
 			sem_post(&arrivalSem);
 		}
 	}

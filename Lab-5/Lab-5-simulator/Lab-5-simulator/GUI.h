@@ -19,10 +19,6 @@
 
 #define CLEAR printf("\x1B[2J");
 
-pthread_mutex_t tuiMutex;
-sem_t tuiSem;
-uint8_t runTUI, readyToUpdateTUI;
-
 static struct termios prgmTerminalSettings;
 
 void initGUI(void);

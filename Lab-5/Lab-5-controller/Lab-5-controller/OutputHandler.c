@@ -7,19 +7,13 @@
 #include "OutputHandler.h"
 
 void outputLights(OutputHandler *self, int lights){
-	
-	//while ( !(UCSR0A & (1<<UDRE0)) ); // Wait until empty transmit buffer
-
 	if (lights == 0){ // North and south is Red 
-		//UDR0 = 0b1010;
-		UDR0 = 0xA;
+		UDR0 = 0xA; // 0xA = 0b1010
 	}
-	if (lights == 1){ // North is Green south is Red
-		//UDR0 = 0b1001;
-		UDR0 = 0x9;
+	 else if (lights == 1){ // North is Green south is Red
+		UDR0 = 0x9; //Ox9 = 0b1001
 	}
-	if (lights == 2){ // North is Red south is Green
-		//UDR0 = 0b0110;	
-		UDR0 = 0x6;	
+	else if (lights == 2){ // North is Red south is Green
+		UDR0 = 0x6;	//0x6 = 0b0110
 	}
 }

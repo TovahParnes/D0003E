@@ -13,11 +13,9 @@
 
 typedef struct {
 	Object super;
-	int current;
 } GUI;
 
-#define initGUI() \
-		{ initObject(), 0}
+#define initGUI() { initObject()}
 			
 void writeChar(char ch, int pos);
 
