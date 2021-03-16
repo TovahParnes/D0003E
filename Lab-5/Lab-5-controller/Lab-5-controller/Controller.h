@@ -14,7 +14,7 @@
 #include "OutputHandler.h"
 #include "GUI.h"
 
-#define maxCarsBeforeSwap 5
+#define maxCarsBeforeSwap 4
 
 //Define direction statuses
 #define BRIDGE 0

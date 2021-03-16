@@ -10,9 +10,11 @@
 #include <avr/io.h>
 
 void sensorInterupt (InputHandler *self){
+	//Wait for receive complete bit set
+	while (!(UCSR0A & (1 << RXC0)));
 	volatile uint8_t data = UDR0;
 	
-	if ((data >> 0) & 1){
+	if (data & northCar){
 		// add to North queue
 		ASYNC(self->controller, addQueue, 1);
 	}
